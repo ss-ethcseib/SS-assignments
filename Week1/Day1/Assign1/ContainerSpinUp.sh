@@ -1,3 +1,3 @@
 #!/bin/bash
 
-sudo docker run HelloWorld
+sudo docker run -it assign1

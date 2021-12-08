@@ -1,3 +1,3 @@
 #!/bin/bash
 
-sudo docker build .
+sudo docker build -t assign1 .
