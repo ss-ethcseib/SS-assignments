@@ -17,8 +17,7 @@ RUN apt-get install -y cscope
 RUN apt-get install -y tree
 
 COPY src/* src/
-CMD["source", "/.bashrc"]
+#CMD["source", "/.bashrc"]
+WORKDIR src/
 
 #Set up a standard ".profile" or ".bashrc" that is included with your Dockerfile, so you have a standardized environment. Upon starting the docker container, your profile should be automatically sourced.
-
-#Set HomeDir
