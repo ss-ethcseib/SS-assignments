@@ -1,14 +1,18 @@
 #include <iostream>
+#include <iomanip>
 
 int main(){
 
-  float arr[] = {5.5f, 15.5f, 155.55f, 1555.555f, 16666.6666f,255555.6f, 2555564.44f};
+  std::cout << "The way I measured float precision was through the use of the iomanip library's setprecision function.\n I used this and the fraction 1.0f/3.0f to measure just how precise the machines can be.\n I was really surprised by the results honestly.\n From school we know that 1/3 is 0.333... When the machines calculate this this number changes.\n At some point the decimal changes from 0.3 repeated and has 4's, 5's and 7's.\n I was so interested I ran this again but using the fraction 1.0f/7.0f.\n It should be 0.142857... repeating the 142857.\n The results of the program yielded 0.14285714924335479736328125 before it stopped printing the number due to a lack of storage space for a float.\n It did not take long for this one to start having trouble with precision. \n\n";
 
-  std::cout << "Given an array of floats consisting of values: 5.5f\n15.5f\n155.55\n1555.555\n16666.6666\n255555.6\n2555564.44" << std::endl;
-  for(float f : arr){
-    std::cout << f << std::endl;
+  std::cout << "Tested fraction 1/3\n\n";
+  for(int i = 0; i < 55; i++){
+    std::cout << std::setprecision(i) << 1.0f/3.0f << std::endl;
   }
-
-  std::cout << "As the printed array shows the values get rounded up and made into scientific notation as the floating point values get larger. Thus, decreasing precision. As added evidence let's add 0.1 to 25555564.4: " << arr[6] + 0.1f << " This changes nothing. It should increment our trailing 6 by 1 due to some rounding of our decimal but does not." << std::endl;
+  
+  std::cout << "\n\nTested fraction 1/7\n";
+  for(int i = 0; i < 55; i++){
+    std::cout << std::setprecision(i) << 1.0f/7.0f << std::endl;
+  }
   return 0;
 }
