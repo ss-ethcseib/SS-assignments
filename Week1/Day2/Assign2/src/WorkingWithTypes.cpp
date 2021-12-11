@@ -1,3 +1,6 @@
+/*Ethan Seiber
+ *Dec. 10, 2021
+ */
 #include <iostream>
 #include <string>
 #include <unordered_map>
@@ -33,6 +36,7 @@ int main() {
 							    
 							    {"short", sizeof(short)},
 };
+	std::cout << "What primitive are you interested in? Don't ask for primitives like long int.\n";
 	std::cin >> val;
 	primitives[val] == 0 ? std::cout << "Unrecognized input\n" : std::cout << "size " << primitives[val] << std::endl;
 

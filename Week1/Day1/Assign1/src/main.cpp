@@ -5,7 +5,7 @@ int fib(int, int, int);
 int main(){
 
   int count = 5;
-  std::cout << "Hello World! This is number " << count << "  in the fibonacci sequence " << fib(0, 1, count) << std::endl;
+  std::cout << "Hello World! " << fib(0, 1, count) << " is number " << count << " in the fibonacci sequence " << std::endl;
 
   return 0;
 }
