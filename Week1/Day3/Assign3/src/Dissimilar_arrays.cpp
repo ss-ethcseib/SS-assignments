@@ -3,17 +3,13 @@
 
 int main(void) {
 
-	float arr[2];
-	int i = 15.0f;
-	float j = 2.4f;
+  void** arr = new void*[2];
+  int i = 6;
+  float f = 1.4f;
+  arr[0] = &i;
+  arr[1] = &f;
 
-	arr[0] = i;
-	arr[1] = j;
-
-	std::cout << "In a float array of size 2 an int is stored at position 0, " << arr[0] << ", and a float at position 1, " << arr[1] << ". The compiler does implicit conversion of the int to float which allows ints to be stored in an array of floats." << std::endl;
-
-	std::cout << std::endl << "Position 0 type compared to original: " << typeid(arr[0]).name() << " int" << "\nPosition 1 type compared to original: " << typeid(arr[1]).name() << " float" << std::endl;
-	std::cout << "\nThe previous results show that the type for our int has been converted to a float and its type has completely changed. We can not recognize it as an int anymore. So, we don't have a way to know what used to be an int and what was always a float after the ints and floats are mixed together in an array. This also works in reverse. If it was an array of ints then the floats would become ints.\n";
-	
+  std::cout << "In a void pointer array of size 2 I have stored an int and a float. According to the compiler the types of each as they are stored in the array are " << typeid(arr[0]).name() << " and " << typeid(arr[1]).name() << ". This tells us that we cannot automatically cast them back to their previous types, because their types have changed to void* in order to be stored inside the void array. With this said we can still get them back to an int and float if we, the programmer, know which was an int and which was a float. Example being: We know the int was stored before the float so we can cast accordingly to get " << *(int*)arr[0] << " and " << *(float*)arr[1] << std::endl;
+  
 	return 0;
 }
