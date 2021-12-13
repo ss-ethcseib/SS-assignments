@@ -1,4 +1,4 @@
-FROM centos
+FROM centos:8
 
 MAINTAINER Ethan Seiber
 

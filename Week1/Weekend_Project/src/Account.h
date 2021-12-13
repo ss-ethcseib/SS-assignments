@@ -11,10 +11,16 @@
     int m_accountNum;
     char* m_dateOpened;
     std::string m_SSN;
+    //When an account is deleted there is now an open
+    //account/account number to be assigned. That is
+    //what this does. Stores the account numbers that
+    //closed to be re-assigned to someone else.
     static std::stack<int> freeAccountNumbers;
     static int accountNum;
+
   public:
     Account(std::string customerName, std::string ssn): m_SSN(ssn) {
+
       
       if(!freeAccountNumbers.empty()){
 	m_accountNum = freeAccountNumbers.top();
@@ -32,7 +38,6 @@
     ~Account(){
       freeAccountNumbers.push(this->m_accountNum);
     };
-    
     
     const char* getDateOpened();
     const int getAccountNumber();

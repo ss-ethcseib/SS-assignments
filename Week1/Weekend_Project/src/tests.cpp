@@ -1,7 +1,7 @@
 #define TrueFalse(x) ((x) == (false) ? ("failed") : ("passed")) 
 #include <iostream>
 #include <string>
-#include "bankcli.h"
+#include "BankLogic.h"
 
 int main(){
 

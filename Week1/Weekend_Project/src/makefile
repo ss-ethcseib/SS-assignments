@@ -1,23 +1,20 @@
 CFLAGS = -c -Wall -g
 TARGET = bankcli
-OBJECTS = bankcli.o Account.o
+OBJECTS = BankLogic.o Account.o
 
 all: $(TARGET)
 
-$(TARGET): main.o bankcli.o Account.o
-	   clang++ -o $(TARGET) main.o bankcli.o Account.o
+$(TARGET): main.o BankLogic.o Account.o
+	   clang++ -o $(TARGET) main.o BankLogic.o Account.o
 
 main.o: main.cpp 
 	clang++ $(CFLAGS) main.cpp 
 
-bankcli.o: bankcli.cpp bankcli.h
-	   clang++ $(CFLAGS) bankcli.cpp 
+bankcli.o: BankLogic.cpp BankLogic.h
+	   clang++ $(CFLAGS) BankLogic.cpp 
 
 Account.o: Account.cpp Account.h
 	clang++ $(CFLAGS) Account.cpp
-
-#clean:
-#	rm -r $(TARGET) *.o
 
 test: tests
 

@@ -2,7 +2,7 @@
 #include <string>
 //#include <curses.h>
 #include <cctype>
-#include "bankcli.h"
+#include "BankLogic.h"
 #include <unordered_map>
 #include <vector>
 
