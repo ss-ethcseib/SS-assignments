@@ -1,16 +1,37 @@
 CFLAGS = -c -Wall -g
 TARGET = bankcli
+OBJECTS = bankcli.o Account.o
 
 all: $(TARGET)
 
-$(TARGET): bankcli.o Account.o
-	   clang++ -o $(TARGET) bankcli.o Account.o
+$(TARGET): main.o bankcli.o Account.o
+	   clang++ -o $(TARGET) main.o bankcli.o Account.o
 
-bankcli.o: bankcli.cpp
-	   clang++ $(CFLAGS) bankcli.cpp
+main.o: main.cpp 
+	clang++ $(CFLAGS) main.cpp 
 
-Account.o: Account.cpp
+bankcli.o: bankcli.cpp bankcli.h
+	   clang++ $(CFLAGS) bankcli.cpp 
+
+Account.o: Account.cpp Account.h
 	clang++ $(CFLAGS) Account.cpp
 
+#clean:
+#	rm -r $(TARGET) *.o
+
+test: tests
+
+tests: tests.o $(OBJECTS)
+	clang++ -o tests tests.o $(OBJECTS)
+
+tests.o: tests.cpp
+	clang++ $(CFLAGS) tests.cpp
+
+#Account.o: Account.cpp
+#	clang++ $(CFLAGS) Account.cpp
+
+#bankcli.o: bankcli.cpp
+#	clang++ $(CFLAGS) bankcli.cpp
+
 clean:
-	rm -r $(TARGET) *.o
+	rm -r *.o tests $(TARGET)
