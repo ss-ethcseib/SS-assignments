@@ -7,3 +7,7 @@ also build the programs yourself using make
 and make tests. The output of the scripts
 and makefile commands should be bankcli and
 tests. 
+
+Notes:
+	The username and password for bankcli
+	is root and password.
