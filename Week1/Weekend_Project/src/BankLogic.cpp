@@ -1,5 +1,6 @@
 #include "BankLogic.h"
-  
+
+namespace BankParts{
 std::unordered_map<int, Account*> BankLogic::customers = std::unordered_map<int, Account*>(); 
 
 bool BankLogic::UserAuthorization(std::string username, std::string password){
@@ -46,8 +47,8 @@ bool BankLogic::DisplayAccount(std::string accNumStr){
     accNum = std::stoi(accNumStr);
 
     if(accNum < Account::getCurrentAccountNumber() && accNum > -1){
-	std::cout << "Account info:\nNAME: " << customers[accNum]->getCustomerName()
-		  << "SSN: " << std::endl << customers[accNum]->getSSN() << std::endl
+      std::cout << "Account info:\nNAME: " << customers[accNum]->getCustomerName() << std::endl
+		  << "SSN: " << customers[accNum]->getSSN() << std::endl
 		  << "DATE OPENED: " << customers[accNum]->getDateOpened()
 		  << "ACCOUNT NUMBER: " << customers[accNum]->getAccountNumber();
 	return true;
@@ -71,6 +72,8 @@ bool BankLogic::SearchName(std::string firstName, std::string lastName){
     return true;
   }
 
+  firstName = StringToLower(firstName);
+  lastName = StringToLower(lastName);
   //Checking to see if the string is only characters and spaces
   if(isalphabet(firstName + lastName)){
     
@@ -83,8 +86,9 @@ bool BankLogic::SearchName(std::string firstName, std::string lastName){
     for(std::unordered_map<int, Account*>::iterator it = customers.begin();
 	it != customers.end(); it++){
       //Get the names of the customers stored in the map
-      mapFName = it->second->getCustomerName().substr(0, it->second->getCustomerName().find(" "));
-      mapLName = it->second->getCustomerName().substr(it->second->getCustomerName().find(" ") + 1);
+      mapFName = StringToLower(it->second->getCustomerName().substr(0, it->second->getCustomerName().find(" ")));
+      
+      mapLName = StringToLower(it->second->getCustomerName().substr(it->second->getCustomerName().find(" ") + 1));
 
       //Determining if the firstName and lastName are substrings of the map names
       if(mapFName.find(firstName) != std::string::npos &&
@@ -92,11 +96,18 @@ bool BankLogic::SearchName(std::string firstName, std::string lastName){
 
 	//Checking to see if the names are exact mathces
 	if(firstName == mapFName && lastName == mapLName){
+
+	  mapFName = it->second->getCustomerName().substr(0, it->second->getCustomerName().find(" "));	  
+	  mapLName = it->second->getCustomerName().substr(it->second->getCustomerName().find(" ") + 1);
 	  
-	  nameMatch = firstName + " " + lastName;
+	  nameMatch = mapFName + " " + mapLName;
 	  nameMatchCount++;
 	}
 	else{
+
+	  mapFName = it->second->getCustomerName().substr(0, it->second->getCustomerName().find(" "));
+          mapLName = it->second->getCustomerName().substr(it->second->getCustomerName().find(" ") + 1);
+
 	  names.push_back(mapFName + " " + mapLName);
 	}
       }
@@ -233,3 +244,12 @@ bool BankLogic::isdigits(std::string str){
   return true;
 }
 
+  std::string BankLogic::StringToLower(std::string str){
+    
+    for(std::string::iterator it = str.begin(); it != str.end(); it++){
+      *it = tolower(*it);
+    }
+    return str;
+    
+  }   
+}

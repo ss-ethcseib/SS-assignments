@@ -6,8 +6,9 @@
 #include <unordered_map>
 #include <vector>
 
+using namespace BankParts;
+
 std::string getPassword(char);
-std::string StringToLower(std::string);
 
 int main(int argc, char** args){
 
@@ -50,12 +51,12 @@ int main(int argc, char** args){
 
     std::getline(std::cin, command);
     
-    if(command == "1" || StringToLower(command) == "show accounts"){
+    if(command == "1" || BankLogic::StringToLower(command) == "show accounts"){
       if(!BankLogic::DisplayAccounts())
 	std::cout << "Cannot complete the command. There are no accounts currently.\n"; 
     }
     
-    else if(command == "2" || StringToLower(command) == "display account"){
+    else if(command == "2" || BankLogic::StringToLower(command) == "display account"){
       
       std::string accNumStr = "";
       
@@ -67,7 +68,7 @@ int main(int argc, char** args){
 	std::cout << "ERR: Invalid account";
       }
     }
-    else if(command == "3" || StringToLower(command) == "search name"){
+    else if(command == "3" || BankLogic::StringToLower(command) == "search name"){
       
 	std::string firstName = "";
 	std::string lastName = "";
@@ -80,7 +81,7 @@ int main(int argc, char** args){
 	  std::cout << "ERR: There was a problem with the name submitted.";
 	}
     }
-    else if(command == "4" || StringToLower(command) == "new account"){
+    else if(command == "4" || BankLogic::StringToLower(command) == "new account"){
       std::string customerName = "";
       std::string SSN = "";
       
@@ -96,7 +97,7 @@ int main(int argc, char** args){
       else
 	std::cout << customerName << " was added to the system." << std::endl;
     }
-    else if(command == "5" || StringToLower(command) == "close account"){
+    else if(command == "5" || BankLogic::StringToLower(command) == "close account"){
 
 	std::string accNumStr = "";
 	std::string answer = "";
@@ -122,7 +123,7 @@ int main(int argc, char** args){
 	}
     }
     
-    else if(command == "6" || StringToLower(command) == "quit"){
+    else if(command == "6" || BankLogic::StringToLower(command) == "quit"){
       cont = false;
     }
     else{
@@ -132,14 +133,6 @@ int main(int argc, char** args){
   
   BankLogic::CloseAccounts();
   return 0;
-}
-
-std::string StringToLower(std::string str){
-
-  for(std::string::iterator it = str.begin(); it != str.end(); it++){
-    *it = tolower(*it);
-  }
-  return str;
 }
 
 std::string getPassword(char sp = '*'){

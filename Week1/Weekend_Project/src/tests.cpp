@@ -2,6 +2,7 @@
 #include <iostream>
 #include <string>
 #include "BankLogic.h"
+using namespace BankParts;
 
 int main(){
 
@@ -67,6 +68,7 @@ int main(){
   std::cout << "\tEmpty String: " << TrueFalse(BankLogic::isalphabet("")) << std::endl;
   std::cout << "\tString of charactes: " << TrueFalse(BankLogic::isalphabet("abc")) << std::endl;
 
+  std::cout << "\n\nStringToLower tests: \n\tDoes a string containing uppercase letters become lowercase: " << (BankLogic::StringToLower("HELLO") == "hello" ? "passed" : "failed" ) << std::endl;
 
   std::cout << "\n\n\n\nAccount Class tests\n\n";
   Account acc("Peter Parker", "555222111");
@@ -77,7 +79,6 @@ int main(){
   std::cout << "getSSN tests:\n\tIs SSN 9 digits long: " << (acc.getSSN().length() == 9 ? "passed" : "failed") << std::endl;
 
   std::cout << "getCustomerName tests:\n\tTest if name is an empty string: " << (acc.getCustomerName() != "" ? "passed" : "failed") << std::endl;
-
   
   return 0;
 }

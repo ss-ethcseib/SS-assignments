@@ -4,6 +4,7 @@
 #include <iostream>
 #include <stack>
 
+namespace BankParts{
   class Account {
   private:
     std::string m_firstName;
@@ -45,4 +46,4 @@
     const std::string getCustomerName();
     static const int getCurrentAccountNumber();
   };
-
+}

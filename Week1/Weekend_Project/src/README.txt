@@ -11,3 +11,6 @@ tests.
 Notes:
 	The username and password for bankcli
 	is root and password.
+
+Future plans:
+       I really want to get the password encryption working.

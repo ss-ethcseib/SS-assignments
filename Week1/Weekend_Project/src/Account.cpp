@@ -1,6 +1,6 @@
 #include "Account.h"
 
-
+namespace BankParts{
 std::stack<int> Account::freeAccountNumbers = std::stack<int>();
 int Account::accountNum = 0;
 
@@ -26,3 +26,4 @@ const int Account::getCurrentAccountNumber(){
   return accountNum;
 }
 
+}

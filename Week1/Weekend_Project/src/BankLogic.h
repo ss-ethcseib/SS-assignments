@@ -9,6 +9,7 @@
 #include "Account.h"
 
 
+namespace BankParts{
   class BankLogic{
   private:
     //Allows for quick account number lookups and
@@ -34,5 +35,6 @@
     //Checks to see if the string is made up of just
     //digits. No letters or special characters.
     static bool isdigits(std::string);
+    static std::string StringToLower(std::string);
   };
-
+}
