@@ -1,7 +1,8 @@
 #!/bin/bash
 
 make > /dev/null
+echo
 
-./program
+./sort
 
 make clean > /dev/null
