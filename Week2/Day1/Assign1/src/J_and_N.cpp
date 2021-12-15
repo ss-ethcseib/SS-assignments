@@ -1,5 +1,6 @@
 #include <iostream>
 #include <string>
+#include <math.h>
 
 bool isdigits(std::string);
 long double pow(int, int);
@@ -44,7 +45,7 @@ int main(void) {
 	long double tmp = (quotient / pow(2, n)) * pow(10, 55);
 	
 	std::cout.precision(60);
-	std::cout << "What the computer sees:\n" << tmp;
+	std::cout << "What the computer sees:\n" << tmp << std::endl;
 	
 	return 0;
 }
