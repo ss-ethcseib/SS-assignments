@@ -1,9 +1,11 @@
 #include <iostream>
 #include <string>
 #include <unordered_map>
+/*Ethan Seiber
+12/16/2021*/
 
 class Grade {
-	std::unordered_map<int, char> grades;//Don't know about this. Quite confusing in the explanation.
+	std::unordered_map<int, char> grades;
 public:
 	Grade() {
 		grades = { {10, 'D'}, {20, 'C'}, {30, 'B'}, {40, 'A'} };
