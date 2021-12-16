@@ -53,7 +53,9 @@ int main(int argc, char** args){
     
     if(command == "1" || BankLogic::StringToLower(command) == "show accounts"){
       if(!BankLogic::DisplayAccounts())
-	std::cout << "Cannot complete the command. There are no accounts currently.\n"; 
+	std::cout << "Cannot complete the command. There are no accounts currently.\n";
+      std::cout << "Press any key to return to home\n";
+      std::getchar();
     }
     
     else if(command == "2" || BankLogic::StringToLower(command) == "display account"){
@@ -67,6 +69,8 @@ int main(int argc, char** args){
       if(!BankLogic::DisplayAccount(accNumStr)){
 	std::cout << "ERR: Invalid account";
       }
+      std::cout << "\n\nPress any key to return to home.";
+      std::getchar();
     }
     else if(command == "3" || BankLogic::StringToLower(command) == "search name"){
       
@@ -80,6 +84,9 @@ int main(int argc, char** args){
 	if(!BankLogic::SearchName(firstName, lastName)){
 	  std::cout << "ERR: There was a problem with the name submitted.";
 	}
+
+	std::cout << "\n\nPress any key to return to home\n";
+	std::getchar();
     }
     else if(command == "4" || BankLogic::StringToLower(command) == "new account"){
       std::string customerName = "";

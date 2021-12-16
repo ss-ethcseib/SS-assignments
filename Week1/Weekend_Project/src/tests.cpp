@@ -22,14 +22,19 @@ int main(){
   BankLogic::CreateNewAccount("John Boom", "111222333");
   BankLogic::CreateNewAccount("Johnson Boomhaur", "222333444");
   BankLogic::CreateNewAccount("Jane Doe", "999888777");
-  std::cout << "\tAccount number 2 selected: \n\t" << TrueFalse(BankLogic::DisplayAccount("1")) << std::endl;
+  std::cout << "\tNull value given: \n\t" << TrueFalse(BankLogic::DisplayAccount(nullptr)) << std::endl;
+  Account acc2("john smith", "996778447");
+  std::cout << "\tGood input given. Account object provided:\n\t" << TrueFalse(BankLogic::DisplayAccount(&acc2))<< std::endl;
+  
+  std::cout << "\tGood input given. Account number 2 selected \n\t" << TrueFalse(BankLogic::DisplayAccount("1")) << std::endl;
   std::cout << "\tNegative account number given: " << TrueFalse(BankLogic::DisplayAccount("-2")) << std::endl;
   std::cout << "\tNon-existant account number given: " << TrueFalse(BankLogic::DisplayAccount("100")) << std::endl;
   std::cout << "\tBad input given (letters): " << TrueFalse(BankLogic::DisplayAccount("hi")) << std::endl;
   std::cout << "\tBad input given (special characters): " << TrueFalse(BankLogic::DisplayAccount("%^$")) << std::endl;
   std::cout << "\tNo input given: " << TrueFalse(BankLogic::DisplayAccount("")) << std::endl;
+
+  std::cout << "\n\nSearch name tests\n\tSearch for name and select account 1: " << TrueFalse(BankLogic::SearchName("John", "Boom")) << std::endl;
   
-  std::cout << "\n\nSearch name tests\n\tSearch for name: " << TrueFalse(BankLogic::SearchName("John", "Boom")) << std::endl;
   std::cout << "\tEmpty string entered for first name: " << TrueFalse(BankLogic::SearchName("", "Boom")) << std::endl;
   std::cout << "\tEmpty string entered for last name: " << TrueFalse(BankLogic::SearchName("John", "")) << std::endl;
   std::cout << "\tNo matches exist: \n" << TrueFalse(BankLogic::SearchName("John", "Doe")) << std::endl;

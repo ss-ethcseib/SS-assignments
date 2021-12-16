@@ -5,7 +5,8 @@
 //#include <curses.h>
 #include <cctype>
 #include <unordered_map>
-#include <vector>
+//#include <vector>
+#include <deque>
 #include "Account.h"
 
 
@@ -23,6 +24,7 @@ namespace BankParts{
   public:
     static bool UserAuthorization(std::string, std::string);
     static bool DisplayAccounts();
+    static bool DisplayAccount(Account*);
     static bool DisplayAccount(std::string);
     static bool SearchName(std::string, std::string);
     static bool CreateNewAccount(std::string, std::string);
