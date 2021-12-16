@@ -1,19 +1,13 @@
-<<<<<<< HEAD
 /*Ethan Seiber
  *Dec. 10, 2021
  */
-=======
 #define min(x, y) x < y ? x : y;
 
->>>>>>> 4946c42bddef2c920988fefc86c18d97a78a8996
 #include <iostream>
 #include <random>
 #include <assert.h>
 #include <string>
-<<<<<<< HEAD
 #include <cmath>
-=======
->>>>>>> 4946c42bddef2c920988fefc86c18d97a78a8996
 
 int** CreateMatrix(int, int);
 void DeleteMatrix(int**, int);
@@ -26,7 +20,6 @@ int main(int argc, char** args) {
 	int BDimensionX = 2;
 	int BDimensionY = 3;
 
-<<<<<<< HEAD
 	if (argc == 5) {
 	  
 		try {
@@ -54,24 +47,6 @@ int main(int argc, char** args) {
 	  BDimensionX = 2;                                                                                 
 	  BDimensionY = 3;  
 	}
-=======
-	if (argc >= 4) {
-
-		try {
-			ADimensionX = std::stoi(args[0]);
-			ADimensionY = std::stoi(args[1]);
-			BDimensionX = std::stoi(args[2]);
-			BDimensionY = std::stoi(args[4]);
-		}
-		catch (...) {
-			ADimensionX = 3;
-			ADimensionY = 2;
-			BDimensionX = 2;
-			BDimensionY = 3;
-		}
-	}
-	
->>>>>>> 4946c42bddef2c920988fefc86c18d97a78a8996
 	//Create matrices
 	int** matrixA = CreateMatrix(ADimensionX, ADimensionY);
 
@@ -80,21 +55,16 @@ int main(int argc, char** args) {
 	//Check matrices dimensionality
 	assert(ADimensionX == BDimensionY);
 
-<<<<<<< HEAD
 	int CDimensionX = ADimensionY;
 	int CDimensionY = BDimensionX;
 	
-=======
-	int CDimensionX = min(ADimensionX, BDimensionX);
-	int CDimensionY = min(ADimensionY, BDimensionY);
->>>>>>> 4946c42bddef2c920988fefc86c18d97a78a8996
 	int** matrixC = CreateMatrix(CDimensionX, CDimensionY);
 
 	//Muliply matrices
 	int matrixCX = 0;
 	int matrixCY = 0;
-<<<<<<< HEAD
 	int matrixAX = 0;
+
 	for (int j = 0; j < CDimensionY; j++) {
 	  matrixCX = 0;
 	  for (int x = 0; x < ADimensionY; x++) {
@@ -121,43 +91,12 @@ int main(int argc, char** args) {
 	
 	std::cout << "Matrix A multiplied with Matrix B:\n";
 	PrintMatrix(matrixC, CDimensionX, CDimensionY);
-	
-=======
-	for (int j = 0; j < ADimensionY; j++) {
-		matrixCX = 0;
-		for (int y = 0; y < CDimensionY; y++) {
-			int sum = 0;
-			int x;
-			for (x = 0; x < ADimensionX; x++) {
-				sum += matrixA[j][x] * matrixB[x][y];
-			}
-			matrixC[matrixCY][matrixCX] = sum;
-			
-			matrixCX++;
-		}
-		matrixCY++;
-	}
-
-	//Print matrices
-	std::cout << "Matrix A:\n";
-	PrintMatrix(matrixA, ADimensionX, ADimensionY);
-
-	std::cout << "Matrix B:\n";
-	PrintMatrix(matrixB, BDimensionX, BDimensionY);
-	 
-	std::cout << "Matrix A multiplied with Matrix B:\n";
-	PrintMatrix(matrixC, CDimensionX, CDimensionY);
-
->>>>>>> 4946c42bddef2c920988fefc86c18d97a78a8996
+        
 	//Delete memory
 	DeleteMatrix(matrixA, ADimensionY);
 	DeleteMatrix(matrixB, BDimensionY);
 	DeleteMatrix(matrixC, CDimensionY);
-<<<<<<< HEAD
-	
-=======
 
->>>>>>> 4946c42bddef2c920988fefc86c18d97a78a8996
 	return 0;
 }
 
