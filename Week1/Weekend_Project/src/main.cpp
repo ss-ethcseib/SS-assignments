@@ -1,10 +1,7 @@
 #include <iostream>
 #include <string>
-//#include <curses.h>
-#include <cctype>
 #include "BankLogic.h"
 #include <unordered_map>
-#include <vector>
 
 using namespace BankParts;
 
