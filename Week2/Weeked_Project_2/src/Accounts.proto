@@ -1,0 +1,13 @@
+syntax = "proto3";
+
+message PBAccount{
+	float balance = 1;
+	string name = 2;
+	int32 accountNum = 3;
+	string dateOpened = 4;
+	int32 SSN = 5;
+}
+
+message PBAccounts{
+	repeated PBAccount accounts = 1;
+}

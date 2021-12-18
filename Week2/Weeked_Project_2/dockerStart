@@ -1,0 +1,4 @@
+#!/bin/bash
+
+sudo docker build -t week2_weekend_project .
+sudo docker run -it week2_weekend_project 
