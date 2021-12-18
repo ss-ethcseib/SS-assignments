@@ -5,6 +5,8 @@
 #include <iostream>
 #include <stack>
 #include "Utilities.h"
+#include "Accounts.pb.h"
+#include <cstring>
 
 namespace BankParts{
   class Account {
@@ -23,6 +25,17 @@ namespace BankParts{
     static int accountNum;
 
   public:
+
+    Account(const PBAccount* acc){
+      m_balance = acc->balance();
+      m_firstName = acc->name().substr(0, acc->name().find(" "));
+      m_lastName = acc->name().substr(acc->name().find(" ") + 1);
+      m_accountNum = acc->accountnum();
+      m_dateOpened = new char[acc->dateopened().length()];
+      std::strcpy(m_dateOpened, acc->dateopened().c_str());
+      m_SSN = acc->ssn();
+    }
+    
     Account(const std::string customerName, const int ssn): m_SSN(ssn) {
 
       m_balance = 0.0f;
