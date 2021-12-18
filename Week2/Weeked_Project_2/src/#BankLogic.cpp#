@@ -370,6 +370,7 @@ namespace BankParts{
       file.close();
       return false;
     }
+    
     file.close();
     for(int i = 0; i < accs.accounts_size(); i++){
       customers[accs.accounts(i).accountnum()] = new Account(&accs.accounts(i));
