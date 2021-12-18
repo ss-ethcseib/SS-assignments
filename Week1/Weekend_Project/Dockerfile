@@ -18,6 +18,7 @@ RUN yum install -y tree
 RUN yum install -y clang
 RUN yum install -y htop
 RUN yum install -y valgrind 
+RUN yum install -y cryptopp cryptopp-devel
 
 COPY src/* src/
 

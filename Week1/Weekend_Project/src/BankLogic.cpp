@@ -7,8 +7,29 @@ namespace BankParts{
     
     if(username == "" || password == "")
       return false;
+
+    CryptoPP::AutoSeededRandomPool prng;
+    CryptoPP::HexEncoder encoder;//new CryptoPP::FileSink(std::cout));
     
-    if(password == "password" && username == "root"){
+    CryptoPP::SecByteBlock key(CryptoPP::AES::DEFAULT_KEYLENGTH);
+    CryptoPP::SecByteBlock iv(CryptoPP::AES::BLOCKSIZE);
+
+    std::string cipher;
+    try{
+      CryptoPP::CBC_Mode<CryptoPP::AES>::Encryption e;
+      e.SetKeyWithIV(key, key.size(), iv);
+      CryptoPP::StringSource s(password, true, new CryptoPP::StreamTransformationFilter(e, new CryptoPP::StringSink(cipher)));
+
+      encoder.Put((const byte*)&cipher[0], cipher.size());
+      encoder.MessageEnd();
+
+      encoder.Get((byte*)&cipher[0], cipher.size());
+      
+    }
+    catch(...){
+    }
+    
+    if(cipher == "168AE480583C3DE3" && username == "root"){
       return true;
     }
     return false;

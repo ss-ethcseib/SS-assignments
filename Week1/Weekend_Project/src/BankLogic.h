@@ -9,6 +9,14 @@
 #include <deque>
 #include "Account.h"
 
+//Encryption libraries
+#include <cryptopp/filters.h>
+#include <cryptopp/osrng.h>
+#include <cryptopp/hex.h>
+#include <cryptopp/modes.h>
+#include <cryptopp/cryptlib.h>
+#include <cryptopp/hex.h>
+#include <cryptopp/files.h>
 
 namespace BankParts{
   class BankLogic{

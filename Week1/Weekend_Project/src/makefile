@@ -5,7 +5,7 @@ OBJECTS = BankLogic.o Account.o
 all: $(TARGET)
 
 $(TARGET): main.o BankLogic.o Account.o
-	   clang++ -o $(TARGET) main.o BankLogic.o Account.o
+	   clang++ -o $(TARGET) main.o BankLogic.o Account.o -lcryptopp
 
 main.o: main.cpp 
 	clang++ $(CFLAGS) main.cpp 
