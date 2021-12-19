@@ -76,6 +76,26 @@ int main(int argc, char** args){
       if(!BankLogic::DisplayAccount(accNumStr)){
 	std::cout << "ERR: Invalid account";
       }
+      else{
+
+	std::cout << "Do you want to update account balance? (y/n)\n";
+	char ans = std::getchar();
+	std::cin.ignore(1, '\n');
+	if(std::tolower(ans) == 'y'){
+	  
+	  std::cout << "Enter transaction ammount:\n";
+	  std::string transAmmount = "";
+	  std::cin >> transAmmount;
+	  
+	  std::cout << "Enter transaction type: (Credit/Debit)\n";
+	  std::string transType = "";
+	  std::cin >> transType;
+	  std::cin.ignore(1, '\n');
+	  
+	  if(!BankLogic::AddTransaction(&accNumStr, &transAmmount, &transType))
+	    std::cout << "Failed to add transaction\n";
+        }
+      }
       
       /*std::cout << "\n\nPress any key to return to home.";
 	std::getchar();*/

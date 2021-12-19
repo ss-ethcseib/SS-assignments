@@ -2,7 +2,9 @@
 
 namespace BankParts{
   std::unordered_map<int, Account*> BankLogic::customers = std::unordered_map<int, Account*>(); 
-  
+  std::stack<int> BankLogic::freeAccountNumbers = std::stack<int>();
+  int BankLogic::accountNum = 0;
+
   const bool BankLogic::UserAuthorization(std::string username, std::string password){
     
     if(username == "" || password == "")
@@ -38,19 +40,21 @@ namespace BankParts{
   
   const bool BankLogic::DisplayAccounts(){
     
-  if(customers.empty()){
-    std::cout << "Sorry, can not complete command. There are currently no accounts in use.\n";
+    if(customers.empty()){
+      std::cout << "Sorry, can not complete command. There are currently no accounts in use.\n";
+      return true;
+    }
+    std::cout << "\nBegin loop\n";
+    
+    for(std::unordered_map<int, Account*>::iterator it = customers.begin();
+	it != customers.end(); it++){
+      std::cout << "\nLoop\n" << customers[1]->getCustomerName();
+      std::cout << "account > Customer name: " << it->second->getCustomerName() << std::endl;
+      std::cout << "        > Account number: " << it->second->getAccountNumber() << std::endl;
+      std::cout << "        > Date opened: " << it->second->getDateOpened() << std::endl << std::endl;
+    }
     return true;
-  }
-  
-  for(std::unordered_map<int, Account*>::iterator it = customers.begin();
-      it != customers.end(); it++){
-    std::cout << "account > Customer name: " << it->second->getCustomerName() << std::endl;
-    std::cout << "        > Account number: " << it->second->getAccountNumber() << std::endl;
-    std::cout << "        > Date opened: " << it->second->getDateOpened() << std::endl << std::endl;
-  }
-  return true;
-  
+    
   }
   
   const bool BankLogic::DisplayAccount(Account* acc){
@@ -66,24 +70,10 @@ namespace BankParts{
 	      << "SSN: " << std::to_string(acc->getSSN()).substr(5) << std::endl
 	      << "DATE OPENED: " << acc->getDateOpened()
       	      << "ACCOUNT NUMBER: " << acc->getAccountNumber();
-
-    std::cout << "Do you want to update account balance? (y/n)\n";
-    char ans = std::getchar();
-
-    if(std::tolower(ans) == 'y'){
-      std::cout << "Enter transaction ammount:\n";
-      std::string transAmmount = "";
-      std::cin >> transAmmount;
-      
-      std::cout << "Enter transaction type: (Credit/Debit)\n";
-      std::string transType = "";
-      std::cin >> transType;
-
-      if(!AddTransaction(acc, &transAmmount, &transType))
-	return false;
-    }
+    
     return true;    
   }
+
   const bool BankLogic::DisplayAccount(std::string accNumStr){
     
     if(accNumStr == "")
@@ -98,43 +88,24 @@ namespace BankParts{
     
     if(isdigits(accNumStr)){                                                                                          
       accNum = std::stoi(accNumStr);
-      
-      if(accNum < Account::getCurrentAccountNumber() && accNum > -1){
-	std::cout << "Account info:\nNAME: " << customers[accNum]->getCustomerName() << std::endl
-		  << "SSN: " << std::to_string(customers[accNum]->getSSN()).substr(5) << std::endl
-		  << "DATE OPENED: " << customers[accNum]->getDateOpened()
-		  << "ACCOUNT NUMBER: " << customers[accNum]->getAccountNumber() << std::endl;
 
-	std::string ans = "";
-	std::cout << "\nDo you want to update account balance? (y/n)\n";
-	std::cin >> ans; 
-	std::cin.ignore(1, '\n');
-	
-	if(StringToLower(&ans) == "yes"){
-	  
-	  std::cout << "Enter transaction ammount:\n";
-	  std::string transAmmount = "";
-	  std::cin >> transAmmount;
-      
-	  std::cout << "Enter transaction type: (Credit/Debit)\n";
-	  std::string transType = "";
-	  std::cin >> transType;
-
-	  if(!AddTransaction(customers[accNum], &transAmmount, &transType))
-	    return false;
-	  return true;
-	}
-      }
-    else
-      return false;
+      if(accNum < accountNum && accNum > -1){
+	std::cout << "Account info:\n\tNAME: " << customers[accNum]->getCustomerName() << std::endl
+		  << "\tSSN: " << std::to_string(customers[accNum]->getSSN()).substr(5) << std::endl
+		  << "\tDATE OPENED: " << customers[accNum]->getDateOpened()
+		  << "\tACCOUNT NUMBER: " << customers[accNum]->getAccountNumber() << std::endl;
+	return true;
       }
       else
 	return false;
-      
-      return false;
     }
-
-  const bool BankLogic::AddTransaction(Account* acc, std::string* ammount, std::string* transType){
+    else
+      return false;
+    
+    return false;
+  }
+  
+  const bool BankLogic::AddTransaction(std::string* accNumStr, std::string* ammount, std::string* transType){
 
     if(StringToLower(transType) != "debit" && StringToLower(transType) != "credit"){
       
@@ -144,7 +115,10 @@ namespace BankParts{
     if(StringToLower(transType) == "credit")
       return true;
 
-    if(!acc->UpdateBalance(ammount)){
+    if(!isdigits(*accNumStr))
+      return false;
+    
+    if(!customers[std::stoi(*accNumStr)]->UpdateBalance(ammount)){
       return false;
     }
     return true;
@@ -279,9 +253,17 @@ namespace BankParts{
     
     if(SSN.length() == 9 && isdigits(SSN) && !ssnExists &&
        isalphabet(customerName) && nameCheck){
-      
+
+      Account* acc = nullptr;
+
       if(std::stoi(SSN) > 0){
-	Account* acc = new Account(customerName, std::stoi(SSN));
+	if(!freeAccountNumbers.empty()){
+	  acc = new Account(customerName, std::stoi(SSN), freeAccountNumbers.top());
+	  freeAccountNumbers.pop();
+	}
+	else
+	  acc = new Account(customerName, std::stoi(SSN), accountNum++);
+	
 	customers[acc->getAccountNumber()] = acc;
       }
       else
@@ -304,10 +286,11 @@ namespace BankParts{
     int accNum = 0;
     
     if(isdigits(accNumStr)){
-    accNum = std::stoi(accNumStr);
+      accNum = std::stoi(accNumStr);
     
-    if(accNum < Account::getCurrentAccountNumber() && accNum > -1){
+    if(accNum < accountNum && accNum > -1){
       
+      freeAccountNumbers.push(accNum);
       delete customers[accNum];
       customers.erase(accNum);
     }
@@ -340,15 +323,16 @@ namespace BankParts{
       return true;
     
     PBAccounts accs;
+    
     for(std::unordered_map<int, Account*>::iterator it = customers.begin();
 	it != customers.end(); it++){
+
       PBAccount* acc = accs.add_accounts();
       acc->set_balance(it->second->GetBalance());
       acc->set_name(it->second->getCustomerName());
       acc->set_accountnum(it->second->getAccountNumber());
       acc->set_dateopened(it->second->getDateOpened());
       acc->set_ssn(it->second->getSSN());
-
     }
 
     std::ofstream file = std::ofstream("Customer_data_binary.bin", std::ios_base::out | std::ios_base::binary);
@@ -370,10 +354,20 @@ namespace BankParts{
       file.close();
       return false;
     }
+    
     file.close();
     for(int i = 0; i < accs.accounts_size(); i++){
       customers[accs.accounts(i).accountnum()] = new Account(&accs.accounts(i));
-      
+      if(accountNum < accs.accounts(i).accountnum()){
+	accountNum = accs.accounts(i).accountnum() + 1;
+      }
+    }
+
+    for(std::unordered_map<int, Account*>::iterator it = customers.begin(); it != customers.end(); it++)
+      std::cout << "\ncheck\n" << it->second->getCustomerName() << "\nindex " << it->first << std::endl;
+    for(int i = 0; i < accountNum; i++){
+      if(customers[i] == nullptr)
+	freeAccountNumbers.push(i);
     }
     return true;
   }

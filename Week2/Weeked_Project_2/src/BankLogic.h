@@ -2,7 +2,6 @@
 
 #include <iostream>
 #include <string>
-#include <string_view>
 #include "Utilities.h"
 //#include <curses.h>
 #include <cctype>
@@ -11,6 +10,7 @@
 #include "Account.h"
 #include "Accounts.pb.h"
 #include <fstream>
+#include <stack>
 
 //Encryption libraries
 #include <cryptopp/filters.h>
@@ -27,6 +27,8 @@ namespace BankParts{
     //Allows for quick account number lookups and
     //For the deletion of an arbitrary account.
     static std::unordered_map<int, Account*> customers;
+    static std::stack<int> freeAccountNumbers;
+    static int accountNum;
     //Wanted to try and keep this class from being instantiated
     //because it's a purely static class.
     BankLogic(){};
@@ -37,7 +39,7 @@ namespace BankParts{
     static const bool DisplayAccounts();
     static const bool DisplayAccount(Account*);
     static const bool DisplayAccount(std::string);
-    static const bool AddTransaction(Account*, std::string*, std::string*);
+    static const bool AddTransaction(std::string*, std::string*, std::string*);
     static const bool SearchName(std::string, std::string);
     static const bool CreateNewAccount(std::string, std::string);
     static const bool CloseAccount(std::string);
