@@ -9,30 +9,38 @@ namespace BankParts{
     
     if(username == "" || password == "")
       return false;
-
+    std::string strng;
     CryptoPP::AutoSeededRandomPool prng;
-    CryptoPP::HexEncoder encoder;//new CryptoPP::FileSink(std::cout));
+    CryptoPP::HexEncoder encoder;//(new CryptoPP::FileSink(std::cout));
+
+    byte* key_vals = new byte[CryptoPP::AES::DEFAULT_KEYLENGTH] {24, 56,054,19,36,22,32,19,68,16,16,115,18,159,56,043};
+    byte* iv_vals = new byte[CryptoPP::AES::BLOCKSIZE] {241,212,241,61,41,66,100,36,240,244,79,156,97,28,84,235};
     
-    CryptoPP::SecByteBlock key(CryptoPP::AES::DEFAULT_KEYLENGTH);
-    CryptoPP::SecByteBlock iv(CryptoPP::AES::BLOCKSIZE);
+    //key_vals = {};
+    //prng.GenerateBlock(key_vals, CryptoPP::AES::DEFAULT_KEYLENGTH);
+    //prng.GenerateBlock(iv_vals, CryptoPP::AES::BLOCKSIZE);
+
+    CryptoPP::SecByteBlock key(reinterpret_cast<const byte*>(key_vals), CryptoPP::AES::DEFAULT_KEYLENGTH);
+    CryptoPP::SecByteBlock iv(reinterpret_cast<const byte*>(iv_vals), CryptoPP::AES::BLOCKSIZE);
 
     std::string cipher;
     try{
       CryptoPP::CBC_Mode<CryptoPP::AES>::Encryption e;
       e.SetKeyWithIV(key, key.size(), iv);
-      CryptoPP::StringSource s(password, true, new CryptoPP::StreamTransformationFilter(e, new CryptoPP::StringSink(cipher)));
+      CryptoPP::StringSource s(password, true,
+	    new CryptoPP::StreamTransformationFilter(e,
+		       new CryptoPP::StringSink(cipher)));
 
       encoder.Put((const byte*)&cipher[0], cipher.size());
       encoder.MessageEnd();
-
-      encoder.Get((byte*)&cipher[0], cipher.size());
       
+      encoder.Get((byte*)&cipher[0], cipher.size()); 
     }
     catch(...){
 
     }
-    
-    if(/*cipher == ""*/password == "password" && username == "root"){
+
+    if(cipher == "FB2FFE082284915C" && username == "root"){
       return true;
     }
     return false;
@@ -44,11 +52,10 @@ namespace BankParts{
       std::cout << "Sorry, can not complete command. There are currently no accounts in use.\n";
       return true;
     }
-    std::cout << "\nBegin loop\n";
     
     for(std::unordered_map<int, Account*>::iterator it = customers.begin();
 	it != customers.end(); it++){
-      std::cout << "\nLoop\n" << customers[1]->getCustomerName();
+
       std::cout << "account > Customer name: " << it->second->getCustomerName() << std::endl;
       std::cout << "        > Account number: " << it->second->getAccountNumber() << std::endl;
       std::cout << "        > Date opened: " << it->second->getDateOpened() << std::endl << std::endl;
@@ -356,6 +363,7 @@ namespace BankParts{
     }
     
     file.close();
+
     for(int i = 0; i < accs.accounts_size(); i++){
       customers[accs.accounts(i).accountnum()] = new Account(&accs.accounts(i));
       if(accountNum < accs.accounts(i).accountnum()){
@@ -363,12 +371,18 @@ namespace BankParts{
       }
     }
 
-    for(std::unordered_map<int, Account*>::iterator it = customers.begin(); it != customers.end(); it++)
-      std::cout << "\ncheck\n" << it->second->getCustomerName() << "\nindex " << it->first << std::endl;
+    int* nums = new int[accountNum];
+    
+    for(int i = 0; i < accs.accounts_size(); i++){
+      nums[accs.accounts(i).accountnum()] = 1;
+    }
+
     for(int i = 0; i < accountNum; i++){
-      if(customers[i] == nullptr)
+      if(nums[i] == 0)
 	freeAccountNumbers.push(i);
     }
+    
+    delete[] nums;
     return true;
   }
 }
