@@ -13,15 +13,16 @@ namespace BankParts{
     CryptoPP::AutoSeededRandomPool prng;
     CryptoPP::HexEncoder encoder;//(new CryptoPP::FileSink(std::cout));
 
-    byte* key_vals = new byte[CryptoPP::AES::DEFAULT_KEYLENGTH] {24, 56,054,19,36,22,32,19,68,16,16,115,18,159,56,043};
-    byte* iv_vals = new byte[CryptoPP::AES::BLOCKSIZE] {241,212,241,61,41,66,100,36,240,244,79,156,97,28,84,235};
+    std::byte* key_vals = new std::byte[CryptoPP::AES::DEFAULT_KEYLENGTH] {(std::byte)24, (std::byte)56,(std::byte)054,(std::byte)19,(std::byte)36,(std::byte)22,(std::byte)32,(std::byte)19,(std::byte)68,(std::byte)16,(std::byte)16,(std::byte)115,(std::byte)18,(std::byte)159,(std::byte)56,(std::byte)043};
+
+    std::byte* iv_vals = new std::byte[CryptoPP::AES::BLOCKSIZE] {(std::byte)241,(std::byte)212,(std::byte)241,(std::byte)61,(std::byte)41,(std::byte)66,(std::byte)100,(std::byte)36,(std::byte)240,(std::byte)244,(std::byte)79,(std::byte)156,(std::byte)97,(std::byte)28,(std::byte)84,(std::byte)235};
     
     //key_vals = {};
     //prng.GenerateBlock(key_vals, CryptoPP::AES::DEFAULT_KEYLENGTH);
     //prng.GenerateBlock(iv_vals, CryptoPP::AES::BLOCKSIZE);
 
-    CryptoPP::SecByteBlock key(reinterpret_cast<const byte*>(key_vals), CryptoPP::AES::DEFAULT_KEYLENGTH);
-    CryptoPP::SecByteBlock iv(reinterpret_cast<const byte*>(iv_vals), CryptoPP::AES::BLOCKSIZE);
+    CryptoPP::SecByteBlock key(reinterpret_cast<const unsigned char*>(key_vals), CryptoPP::AES::DEFAULT_KEYLENGTH);
+    CryptoPP::SecByteBlock iv(reinterpret_cast<const unsigned char*>(iv_vals), CryptoPP::AES::BLOCKSIZE);
 
     std::string cipher;
     try{
@@ -31,10 +32,10 @@ namespace BankParts{
 	    new CryptoPP::StreamTransformationFilter(e,
 		       new CryptoPP::StringSink(cipher)));
 
-      encoder.Put((const byte*)&cipher[0], cipher.size());
+      encoder.Put((const unsigned char*)&cipher[0], cipher.size());
       encoder.MessageEnd();
       
-      encoder.Get((byte*)&cipher[0], cipher.size()); 
+      encoder.Get((unsigned char*)&cipher[0], cipher.size()); 
     }
     catch(...){
 

@@ -18,8 +18,12 @@ RUN yum install -y tree
 RUN yum install -y clang
 RUN yum install -y htop
 RUN yum install -y valgrind
-RUN yum install -y protobuf-devel
-RUN yum install -y protobuff-compiler
+RUN yum install -y protobuf
+RUN yum install -y protobuf-c-devel
+RUN dnf --enablerepo=powertools install -y protobuf-devel
+RUN dnf install -y cryptopp
+RUN dnf install -y cryptopp-devel
+RUN yum install -y protobuf-compiler
 
 COPY src/* src/
 
