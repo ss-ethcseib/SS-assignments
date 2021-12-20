@@ -1,29 +1,51 @@
 #include "Account.h"
 
 namespace BankParts{
+
+  Account* Account::CreateAccount(const std::string* customerName, const std::string* SSN, const int accNum){
+    
+    if(*customerName == "" || *SSN == "" || accNum < 0)
+      return nullptr;
+    
+    bool nameCheck = true;
+    Account* acc = nullptr;
+    
+    if(customerName->find(" ") != std::string::npos){
+      
+      if(customerName->find(" ") == customerName->length() - 1){
+	
+        nameCheck = false;	
+      }
+    }
+    else
+      nameCheck = false;
+
+    if(SSN->length() == 9 && isdigits(SSN) &&
+       isalphabet(customerName) && nameCheck){
+      
+      if(std::stoi(*SSN) > 0){
+	
+	acc = new Account(customerName, std::stoi(*SSN), accNum);
+      }
+      else
+	return nullptr;
+      
+      return acc; 
+    }
+    return nullptr;
+  }
   
-  const float Account::GetBalance(){
+  const float Account::getBalance(){
     return m_balance;
   }
   
-  bool Account::UpdateBalance(std::string* ammount){
+  const bool Account::UpdateBalance(const float* ammount){
     
-    if(ammount[0] == "+" || ammount[0] == "-"){                             
-      if(!isdigits((*ammount).substr(1))){                                       
-        return false;                                                         
-      }                                                                      
-    }
-    else if(!isdigits(*ammount)){                                           
-      
-      return false;                                                           
-    }
-    float amt = std::stof(*ammount);
-    
-    if(m_balance + amt < 0.0f){
+    if(m_balance + *ammount < 0.0f){
       std::cout << "Err: Insufficient balance.";
       return true;
     }
-    m_balance += amt;
+    m_balance += *ammount;
     return true;
   }
   

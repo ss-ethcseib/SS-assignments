@@ -35,14 +35,14 @@ namespace BankParts{
     ~BankLogic(){};
     
   public:
-    static const bool UserAuthorization(std::string, std::string);
+    static const bool UserAuthorization(const std::string*, const std::string*);
     static const bool DisplayAccounts();
     static const bool DisplayAccount(Account*);
-    static const bool DisplayAccount(std::string);
-    static const bool AddTransaction(std::string*, std::string*, std::string*);
-    static const bool SearchName(std::string, std::string);
-    static const bool CreateNewAccount(std::string, std::string);
-    static const bool CloseAccount(std::string);
+    static const bool DisplayAccount(const int);
+    static const bool AddTransaction(const int, const float*, const std::string*);
+    static const bool SearchName(const std::string*, const std::string*);
+    static const bool CreateNewAccount(const std::string*, const int);
+    static const bool CloseAccount(const int);
     static const bool CloseAccounts();
     static const bool WriteCustomersData();
     static const bool ReadCustomersData();

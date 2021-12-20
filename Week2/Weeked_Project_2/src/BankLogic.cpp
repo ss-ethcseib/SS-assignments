@@ -5,9 +5,9 @@ namespace BankParts{
   std::stack<int> BankLogic::freeAccountNumbers = std::stack<int>();
   int BankLogic::accountNum = 0;
 
-  const bool BankLogic::UserAuthorization(std::string username, std::string password){
+  const bool BankLogic::UserAuthorization(const std::string* username, const std::string* password){
     
-    if(username == "" || password == "")
+    if(*username == "" || *password == "")
       return false;
     std::string strng;
     CryptoPP::AutoSeededRandomPool prng;
@@ -27,7 +27,7 @@ namespace BankParts{
     try{
       CryptoPP::CBC_Mode<CryptoPP::AES>::Encryption e;
       e.SetKeyWithIV(key, key.size(), iv);
-      CryptoPP::StringSource s(password, true,
+      CryptoPP::StringSource s(*password, true,
 	    new CryptoPP::StreamTransformationFilter(e,
 		       new CryptoPP::StringSink(cipher)));
 
@@ -40,7 +40,7 @@ namespace BankParts{
 
     }
 
-    if(cipher == "FB2FFE082284915C" && username == "root"){
+    if(cipher == "FB2FFE082284915C" && *username == "root"){
       return true;
     }
     return false;
@@ -49,8 +49,7 @@ namespace BankParts{
   const bool BankLogic::DisplayAccounts(){
     
     if(customers.empty()){
-      std::cout << "Sorry, can not complete command. There are currently no accounts in use.\n";
-      return true;
+      return false;
     }
     
     for(std::unordered_map<int, Account*>::iterator it = customers.begin();
@@ -69,82 +68,73 @@ namespace BankParts{
       return false;
     
     if(customers.empty()){
-      std::cout << "Sorry, can not complete command. There are currently no accounts in use.\n";
-	return true;
+	return false;
     }
-    
-    std::cout << "Account info:\nNAME: " << acc->getCustomerName() << std::endl
-	      << "SSN: " << std::to_string(acc->getSSN()).substr(5) << std::endl
-	      << "DATE OPENED: " << acc->getDateOpened()
-      	      << "ACCOUNT NUMBER: " << acc->getAccountNumber();
-    
+
+    DisplayAccount(acc->getAccountNumber());
+
     return true;    
   }
 
-  const bool BankLogic::DisplayAccount(std::string accNumStr){
-    
-    if(accNumStr == "")
-      return false;
-    
+  const bool BankLogic::DisplayAccount(const int accNum){
+        
     if(customers.empty()){
-      std::cout << "Sorry, can not complete command. There are currently no accounts in use.\n";
+      return false;
+    }
+
+    if(accNum < accountNum && accNum > -1){
+      
+      std::cout << "Account info:\n\tNAME: " << customers[accNum]->getCustomerName() << std::endl
+		<< "\tBALANCE: " << customers[accNum]->getBalance() << std::endl
+		<< "\tSSN: " << std::to_string(customers[accNum]->getSSN()).substr(5) << std::endl
+		<< "\tDATE OPENED: " << customers[accNum]->getDateOpened()
+		<< "\tACCOUNT NUMBER: " << customers[accNum]->getAccountNumber() << std::endl;
+      
       return true;
     }
-    
-    int accNum = 0;
-    
-    if(isdigits(accNumStr)){                                                                                          
-      accNum = std::stoi(accNumStr);
-
-      if(accNum < accountNum && accNum > -1){
-	std::cout << "Account info:\n\tNAME: " << customers[accNum]->getCustomerName() << std::endl
-		  << "\tSSN: " << std::to_string(customers[accNum]->getSSN()).substr(5) << std::endl
-		  << "\tDATE OPENED: " << customers[accNum]->getDateOpened()
-		  << "\tACCOUNT NUMBER: " << customers[accNum]->getAccountNumber() << std::endl;
-	return true;
-      }
-      else
-	return false;
-    }
-    else
+    else{
       return false;
+    }
     
     return false;
   }
   
-  const bool BankLogic::AddTransaction(std::string* accNumStr, std::string* ammount, std::string* transType){
+  const bool BankLogic::AddTransaction(const int accNum, const float* ammount, const std::string* transType){
 
+    if(customers.empty()){
+      return false;
+    }
+    
     if(StringToLower(transType) != "debit" && StringToLower(transType) != "credit"){
       
       return false;
     }
     
+    
     if(StringToLower(transType) == "credit")
       return true;
-
-    if(!isdigits(*accNumStr))
-      return false;
     
-    if(!customers[std::stoi(*accNumStr)]->UpdateBalance(ammount)){
+    if(!customers[accNum]->UpdateBalance(ammount)){
       return false;
     }
+
     return true;
   }
   
-  const bool BankLogic::SearchName(std::string firstName, std::string lastName){
+  const bool BankLogic::SearchName(const std::string* firstName, const std::string* lastName){
     
-    if(firstName == "" || lastName == "")
+    if(*firstName == "" || *lastName == "")
       return false;
     
     if(customers.empty()){
-      std::cout << "Sorry, can not complete command. There are currently no accounts in use.\n";
-      return true;
+      return false;
     }
     
-    firstName = StringToLower(&firstName);
-    lastName = StringToLower(&lastName);
+    std::string fName = StringToLower(firstName);
+    std::string lName = StringToLower(lastName);
+    std::string fullName = fName + lName;
     //Checking to see if the string is only characters and spaces
-    if(isalphabet(firstName + lastName)){
+    if(isalphabet(&fullName)){
       
       std::string mapFName = "";
       std::string mapLName = "";
@@ -160,11 +150,11 @@ namespace BankParts{
 	mapLName = it->second->getCustomerName().substr(it->second->getCustomerName().find(" ") + 1);
 	mapLName = StringToLower(&mapLName);
 	//Determining if the firstName and lastName are substrings of the map names
-	if(mapFName.find(firstName) != std::string::npos &&
-	   mapLName.find(lastName) != std::string::npos){
+	if(mapFName.find(fName) != std::string::npos &&
+	   mapLName.find(lName) != std::string::npos){
 	  
 	  //Checking to see if the names are exact mathces
-	  if(firstName == mapFName && lastName == mapLName){
+	  if(fName == mapFName && lName == mapLName){
 	    
 	    names.push_front(it->second);
 	  }
@@ -189,14 +179,12 @@ namespace BankParts{
 	
 	std::cout << "Select an account by entering one of the numbers.\n";
 	std::cin >> ans;
+	
+	ans = TrimWhiteSpace(&ans);
+
 	std::cin.ignore(1, '\n');
 	
-	if(!isdigits(ans)){
-	  std::cout << "No number entered or number was negative. Lookup failed.";
-	  return false;
-	}
-	
-	if(std::stoi(ans) >= i + 1 || std::stoi(ans) <= 0){
+	if(!isdigits(&ans) || std::stoi(ans) >= i + 1 || std::stoi(ans) <= 0){
 	  std::cout<< "Invalid number detected.\n";
 
 	  std::cout << "Please provide a name or type home to leave.\n";
@@ -235,65 +223,45 @@ namespace BankParts{
     return true;
   }
   
-  const bool BankLogic::CreateNewAccount(std::string customerName, std::string SSN){
-    
-    if(customerName == "" || SSN == "")
-      return false;
-    
-    bool nameCheck = true;
+  const bool BankLogic::CreateNewAccount(const std::string* customerName, const int SSN){
+
     bool ssnExists = false;
-  
-    if(customerName.find(" ") != std::string::npos){
-      if(customerName.find(" ") == customerName.length() - 1){
-	nameCheck = false;
-      }
-    }
-    else
-      nameCheck = false;
+    Account* acc = nullptr;
     
     for(std::unordered_map<int, Account*>::iterator it = customers.begin();
 	it != customers.end(); it++){
-      if(it->second->getSSN() == std::stoi(SSN)){
+      if(it->second->getSSN() == SSN){
 	ssnExists = true;
       }
     }
-    
-    if(SSN.length() == 9 && isdigits(SSN) && !ssnExists &&
-       isalphabet(customerName) && nameCheck){
-
-      Account* acc = nullptr;
-
-      if(std::stoi(SSN) > 0){
-	if(!freeAccountNumbers.empty()){
-	  acc = new Account(customerName, std::stoi(SSN), freeAccountNumbers.top());
-	  freeAccountNumbers.pop();
-	}
-	else
-	  acc = new Account(customerName, std::stoi(SSN), accountNum++);
-	
-	customers[acc->getAccountNumber()] = acc;
+    std::string* ssn = new std::string(std::to_string(SSN));
+    if(!ssnExists){
+      if(!freeAccountNumbers.empty()){
+	acc = Account::CreateAccount(customerName, ssn, freeAccountNumbers.top());
+	freeAccountNumbers.pop();
+	delete ssn;
       }
-      else
+      else{
+        acc = Account::CreateAccount(customerName, ssn, accountNum++);
+	delete ssn;
+      }
+      if(acc == nullptr)
 	return false;
+      
+      customers[acc->getAccountNumber()] = acc;
+
+      return true;
     }
     else
       return false;
-    return true;
+    
   }
   
-  const bool BankLogic::CloseAccount(std::string accNumStr){
-    
-    if(accNumStr == "")
-      return false;
+  const bool BankLogic::CloseAccount(const int accNum){
     
     if(customers.empty()){
-      std::cout << "Sorry, command could not be completed because there are currently no accounts in use.\n";
-      return true;
+      return false;
     }
-    int accNum = 0;
-    
-    if(isdigits(accNumStr)){
-      accNum = std::stoi(accNumStr);
     
     if(accNum < accountNum && accNum > -1){
       
@@ -302,12 +270,8 @@ namespace BankParts{
       customers.erase(accNum);
     }
     else
-      return false;
-      }
-    else
-      return false;
-    
-    return true;
+      return false;  
+    return false;
   }
   
   
@@ -335,7 +299,7 @@ namespace BankParts{
 	it != customers.end(); it++){
 
       PBAccount* acc = accs.add_accounts();
-      acc->set_balance(it->second->GetBalance());
+      acc->set_balance(it->second->getBalance());
       acc->set_name(it->second->getCustomerName());
       acc->set_accountnum(it->second->getAccountNumber());
       acc->set_dateopened(it->second->getDateOpened());
@@ -366,7 +330,7 @@ namespace BankParts{
 
     for(int i = 0; i < accs.accounts_size(); i++){
       customers[accs.accounts(i).accountnum()] = new Account(&accs.accounts(i));
-      if(accountNum < accs.accounts(i).accountnum()){
+      if(accountNum <= accs.accounts(i).accountnum()){
 	accountNum = accs.accounts(i).accountnum() + 1;
       }
     }

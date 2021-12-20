@@ -1,10 +1,12 @@
 #pragma once
 
 #include <string>
+
 namespace BankParts{
 
-  std::string StringToLower(std::string*);
-  bool isalphabet(std::string);
-  bool isdigits(std::string);
+  std::string TrimWhiteSpace(const std::string*);
+  std::string StringToLower(const std::string*);
+  bool isalphabet(const std::string*);
+  bool isdigits(const std::string*);
   
 }

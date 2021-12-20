@@ -23,7 +23,7 @@ int main(int argc, char** args){
     std::cin >> password;
     //password = getPassword('*');
 
-    if(BankLogic::UserAuthorization(username, password)){
+    if(BankLogic::UserAuthorization(&username, &password)){
       cont = false;
       errCount = 0;
     }
@@ -40,13 +40,12 @@ int main(int argc, char** args){
 
   BankLogic::ReadCustomersData();
   
-  std::string command = "";
   errCount = 0;
   cont = true;
   std::cin.ignore(1, '\n');
 
   while(cont){
-
+    std::string command = "";
     std::cout << "\n\nCommand list:\n" 
 "\t1. Show accounts\n" 
 "\t2. Display account\n"
@@ -56,15 +55,15 @@ int main(int argc, char** args){
 "\t6. Quit\n"  
 "What is your command?\n";
 
+    
     std::getline(std::cin, command);
+    
+    command = TrimWhiteSpace(&command);
     
     if(command == "1" || BankParts::StringToLower(&command) == "show accounts"){
       if(!BankLogic::DisplayAccounts())
-	std::cout << "Cannot complete the command. There are no accounts currently.\n";
-      /*std::cout << "Press any key to return to home\n";
-	std::getchar();*/
+	std::cout << "\nSorry, it would appear there are currently no accounts in use.\n";
     }
-    
     else if(command == "2" || BankParts::StringToLower(&command) == "display account"){
       
       std::string accNumStr = "";
@@ -72,33 +71,93 @@ int main(int argc, char** args){
       std::cout << "Give me the account number\naccount > ";
       std::cin >> accNumStr;
       std::cin.ignore(1, '\n');
-      
-      if(!BankLogic::DisplayAccount(accNumStr)){
-	std::cout << "ERR: Invalid account";
-      }
-      else{
 
-	std::cout << "Do you want to update account balance? (y/n)\n";
-	char ans = std::getchar();
-	std::cin.ignore(1, '\n');
-	if(std::tolower(ans) == 'y'){
+      accNumStr = TrimWhiteSpace(&accNumStr);
+
+      if(accNumStr != "" && isdigits(&accNumStr)){
+	
+	int accNum = std::stoi(accNumStr);
+      
+	if(!BankLogic::DisplayAccount(accNum)){
+	  std::cout << "\nSorry, this seems to be an invalid account number.\n";
+	}
+	else{
+	  
+	  std::string ans = "";
+	  std::cout << "Do you want to update account balance? (y/n)\n";
+	  std::cin >> ans;
+	  std::cin.ignore(1, '\n');
+        
+	if(std::tolower(ans[0]) == 'y'){
 	  
 	  std::cout << "Enter transaction ammount:\n";
-	  std::string transAmmount = "";
-	  std::cin >> transAmmount;
-	  
+	  std::string transAmmountStr = "";
+	  std::cin >> transAmmountStr;
+	  std::cin.ignore(1, '\n');
 	  std::cout << "Enter transaction type: (Credit/Debit)\n";
 	  std::string transType = "";
 	  std::cin >> transType;
 	  std::cin.ignore(1, '\n');
+
+	  transAmmountStr = TrimWhiteSpace(&transAmmountStr);
+	  transType = TrimWhiteSpace(&transType);
+
+
+	  if(transAmmountStr[0] == '+' || transAmmountStr[0] == '-'){
+	    	    
+	    std::string* split1 = new std::string(transAmmountStr.substr(1));
+	    
+	    if(split1->find(".") != std::string::npos){
+	      
+	      std::string* split2 = new std::string(split1->substr(split1->find(".") + 1));                                                         
+	      
+	      *split1 = split1->substr(0, split1->find("."));
+	      
+	      if(!isdigits(split1) || !isdigits(split2)){
+		delete split1;
+		delete split2;
+		std::cout << "\nTransaction ammount was not a recognizable number.\n";
+		continue;
+	      }
+	      delete split2;
+	      delete split1;
+	    }
+	  } 
+	  else if(transAmmountStr.find(".") != std::string::npos){
+	    
+	    std::string* split1 = new std::string(transAmmountStr.substr(0, transAmmountStr.find(".")));
+	    
+	    std::string* split2 = new std::string(transAmmountStr.substr(transAmmountStr.find(".") + 1));
+	    
+	    if(!isdigits(split1) || !isdigits(split2)){
+	      delete split1;
+	      delete split2;
+	      
+	      std::cout << "\nTransaction ammount was not a recognizable string.\n";
+	      continue;
+	    }
+	    delete split1;
+	    delete split2;
+	  } 
+	  else if(!isdigits(&transAmmountStr)){
+	    std::cout << "\nThe transaction ammount was not a recognizable number\n.";
+	    continue;
+	  }
 	  
-	  if(!BankLogic::AddTransaction(&accNumStr, &transAmmount, &transType))
-	    std::cout << "Failed to add transaction\n";
-        }
+	  float transAmmount = std::stof(transAmmountStr);
+	  
+	  if(!BankLogic::AddTransaction(accNum, &transAmmount, &transType))
+	    std::cout << "\nFailed to add transaction\n";
+	  
+	  //while ((getchar()) != '\n');
+	}
+	else if(std::tolower(ans[0]) != 'n')
+	  std::cout << "\nSorry, that was not an answer. Returning home\n";
+	}
+	
       }
-      
-      /*std::cout << "\n\nPress any key to return to home.";
-	std::getchar();*/
+      else
+	std::cout << "\nThe account number was not recognizable.\n";
     }
     
     else if(command == "3" || BankParts::StringToLower(&command) == "search name"){
@@ -110,12 +169,13 @@ int main(int argc, char** args){
 	std::cin >> firstName; std::cin >> lastName;
 	std::cin.ignore(1, '\n');
 
-	if(!BankLogic::SearchName(firstName, lastName)){
-	  std::cout << "ERR: There was a problem with the name submitted.";
+	firstName = TrimWhiteSpace(&firstName);
+	lastName = TrimWhiteSpace(&lastName);
+	
+	if(!BankLogic::SearchName(&firstName, &lastName)){
+	  std::cout << "\nSorry, there was a problem with the name submitted.\n";
 	}
-
-	/*std::cout << "\n\nPress any key to return to home\n";
-	  std::getchar();*/
+	//while ((getchar()) != '\n');
     }
     else if(command == "4" || BankParts::StringToLower(&command) == "new account"){
       std::string customerName = "";
@@ -127,11 +187,21 @@ int main(int argc, char** args){
       std::cout << "Now provide their SSN (Social Security number). This number should be 9 digits.\n";
       std::getline(std::cin, SSN);
 
-      if(!BankLogic::CreateNewAccount(customerName, SSN)){
-	std::cout << "Sorry, there was a problem with the customer's name or their SSN";
+      customerName = TrimWhiteSpace(&customerName);
+      SSN = TrimWhiteSpace(&SSN);
+
+      if(SSN.length() != 9 || !isdigits(&SSN)){
+	std::cout << "\nThe entered SSN did not meet the requirements needed.\n";
+	continue;
+      }
+        
+      if(!BankLogic::CreateNewAccount(&customerName, std::stoi(SSN))){
+	
+	std::cout << "\nSorry, there was a problem with the customer's name or their SSN.\n";
       }
       else
 	std::cout << customerName << " was added to the system." << std::endl;
+      //while ((getchar()) != '\n');
     }
     else if(command == "5" || BankParts::StringToLower(&command) == "close account"){
 
@@ -150,12 +220,24 @@ int main(int argc, char** args){
 	  if(std::tolower(answer[0]) == 'y'){
 	    
 	    loop = false;
-	    if(!BankLogic::CloseAccount(accNumStr))
+
+	    accNumStr = TrimWhiteSpace(&accNumStr);
+
+	    if(accNumStr == "" && !isdigits(&accNumStr)){
+	      std::cout << "\nThe account number entered was not a recognizable number.\n";
+	      continue;
+	    }
+
+	
+	    int accNum = std::stoi(accNumStr);
+	    if(!BankLogic::CloseAccount(accNum))
 	      std::cout << "\nSorry, the account number entered does not match any accounts.\n"; 
 	  }
 	  
 	  else if(std::tolower(answer[0]) == 'n')
 	    loop = false;
+
+	  //while ((getchar()) != '\n');
 	}
     }
     
@@ -169,32 +251,6 @@ int main(int argc, char** args){
 
   BankLogic::WriteCustomersData();
   BankLogic::CloseAccounts();
+  
   return 0;
-}
-
-std::string getPassword(char sp = '*'){
-
-  /*  std::string passwd = "";
-  char input = '';
-
-  while(true){
-    input = getch();
-
-    if(input == KEY_ENTER){
-      std::cout << std::endl;
-      return passwd;
-    }
-    else if(input == KEY_BACKSPACE && passwd.length() != 0){
-      passwd.pop_back();
-      std::cout << "\b \b";
-      continue;
-    }
-    else if(input == KEY_BACKSPACE && passwd.length() == 0){
-      continue;
-    }
-
-    passwd.push_back(input);
-    std::cout << sp;
-    }*/
-  return "";
 }
