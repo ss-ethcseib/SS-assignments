@@ -194,8 +194,12 @@ int main(int argc, char** args){
 	std::cout << "\nThe entered SSN did not meet the requirements needed.\n";
 	continue;
       }
-        
-      if(!BankLogic::CreateNewAccount(&customerName, std::stoi(SSN))){
+      if(customerName.find(" ") == std::string::npos){
+	std::cout << "\nOnly a first name was provided. Please try again.\n";
+	continue;
+      }
+      
+      if(!BankLogic::CreateNewAccount(&customerName, &SSN)){
 	
 	std::cout << "\nSorry, there was a problem with the customer's name or their SSN.\n";
       }

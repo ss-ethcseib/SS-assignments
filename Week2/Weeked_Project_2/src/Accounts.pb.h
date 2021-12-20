@@ -175,6 +175,20 @@ class PBAccount : public ::google::protobuf::Message /* @@protoc_insertion_point
   ::std::string* release_dateopened();
   void set_allocated_dateopened(::std::string* dateopened);
 
+  // string SSN = 5;
+  void clear_ssn();
+  static const int kSSNFieldNumber = 5;
+  const ::std::string& ssn() const;
+  void set_ssn(const ::std::string& value);
+  #if LANG_CXX11
+  void set_ssn(::std::string&& value);
+  #endif
+  void set_ssn(const char* value);
+  void set_ssn(const char* value, size_t size);
+  ::std::string* mutable_ssn();
+  ::std::string* release_ssn();
+  void set_allocated_ssn(::std::string* ssn);
+
   // float balance = 1;
   void clear_balance();
   static const int kBalanceFieldNumber = 1;
@@ -187,21 +201,15 @@ class PBAccount : public ::google::protobuf::Message /* @@protoc_insertion_point
   ::google::protobuf::int32 accountnum() const;
   void set_accountnum(::google::protobuf::int32 value);
 
-  // int32 SSN = 5;
-  void clear_ssn();
-  static const int kSSNFieldNumber = 5;
-  ::google::protobuf::int32 ssn() const;
-  void set_ssn(::google::protobuf::int32 value);
-
   // @@protoc_insertion_point(class_scope:PBAccount)
  private:
 
   ::google::protobuf::internal::InternalMetadataWithArena _internal_metadata_;
   ::google::protobuf::internal::ArenaStringPtr name_;
   ::google::protobuf::internal::ArenaStringPtr dateopened_;
+  ::google::protobuf::internal::ArenaStringPtr ssn_;
   float balance_;
   ::google::protobuf::int32 accountnum_;
-  ::google::protobuf::int32 ssn_;
   mutable ::google::protobuf::internal::CachedSize _cached_size_;
   friend struct ::protobuf_Accounts_2eproto::TableStruct;
 };
@@ -459,18 +467,57 @@ inline void PBAccount::set_allocated_dateopened(::std::string* dateopened) {
   // @@protoc_insertion_point(field_set_allocated:PBAccount.dateOpened)
 }
 
-// int32 SSN = 5;
+// string SSN = 5;
 inline void PBAccount::clear_ssn() {
-  ssn_ = 0;
+  ssn_.ClearToEmptyNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
 }
-inline ::google::protobuf::int32 PBAccount::ssn() const {
+inline const ::std::string& PBAccount::ssn() const {
   // @@protoc_insertion_point(field_get:PBAccount.SSN)
-  return ssn_;
+  return ssn_.GetNoArena();
 }
-inline void PBAccount::set_ssn(::google::protobuf::int32 value) {
+inline void PBAccount::set_ssn(const ::std::string& value) {
   
-  ssn_ = value;
+  ssn_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), value);
   // @@protoc_insertion_point(field_set:PBAccount.SSN)
+}
+#if LANG_CXX11
+inline void PBAccount::set_ssn(::std::string&& value) {
+  
+  ssn_.SetNoArena(
+    &::google::protobuf::internal::GetEmptyStringAlreadyInited(), ::std::move(value));
+  // @@protoc_insertion_point(field_set_rvalue:PBAccount.SSN)
+}
+#endif
+inline void PBAccount::set_ssn(const char* value) {
+  GOOGLE_DCHECK(value != NULL);
+  
+  ssn_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), ::std::string(value));
+  // @@protoc_insertion_point(field_set_char:PBAccount.SSN)
+}
+inline void PBAccount::set_ssn(const char* value, size_t size) {
+  
+  ssn_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(),
+      ::std::string(reinterpret_cast<const char*>(value), size));
+  // @@protoc_insertion_point(field_set_pointer:PBAccount.SSN)
+}
+inline ::std::string* PBAccount::mutable_ssn() {
+  
+  // @@protoc_insertion_point(field_mutable:PBAccount.SSN)
+  return ssn_.MutableNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+}
+inline ::std::string* PBAccount::release_ssn() {
+  // @@protoc_insertion_point(field_release:PBAccount.SSN)
+  
+  return ssn_.ReleaseNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+}
+inline void PBAccount::set_allocated_ssn(::std::string* ssn) {
+  if (ssn != NULL) {
+    
+  } else {
+    
+  }
+  ssn_.SetAllocatedNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), ssn);
+  // @@protoc_insertion_point(field_set_allocated:PBAccount.SSN)
 }
 
 // -------------------------------------------------------------------

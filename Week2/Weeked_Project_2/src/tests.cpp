@@ -37,21 +37,27 @@ int main(){
 
   std::cout << "\n\nDisplay Accounts tests\n\tNo accounts in use: \n\t" << TrueFalse(BankLogic::DisplayAccounts()) << std::endl;
   std::string* name = new std::string("John Doe");
-  int SSN = 111222333;
+  std::string* SSN = new std::string("111222333");
   BankLogic::CreateNewAccount(name, SSN);
   std:: cout << "\tAccounts in use: \n\t" << TrueFalse(BankLogic::DisplayAccounts()) << std::endl;
 
   BankLogic::CloseAccounts();
 
   std::cout << "\n\nDisplay Account tests\n\tNo accounts in use: \n\t" << TrueFalse(BankLogic::DisplayAccount(0)) << std::endl;
+
   *name = "John Boom";
-  BankLogic::CreateNewAccount(name, 112334556);
+  *SSN = "112334556";
+  BankLogic::CreateNewAccount(name, SSN);
   *name = "Johnson Boomhaur";
-  BankLogic::CreateNewAccount(name, 222333444);
+  *SSN = "999888777";
+  BankLogic::CreateNewAccount(name, SSN);
   *name = "Jane Doe";
-  BankLogic::CreateNewAccount(name, 999888777);
+  *SSN = "999888777";
+  BankLogic::CreateNewAccount(name, SSN);
   std::cout << "\tNull value given: \n\t" << TrueFalse(BankLogic::DisplayAccount(nullptr)) << std::endl;
   *name = "john smith";
+  delete SSN;
+  
   std::string* ssn = new std::string("996778447");
   Account* acc2 = Account::CreateAccount(name, ssn, 15);
   
@@ -64,6 +70,19 @@ int main(){
   float* amt = new float(100.5f);
   std::string* type = new std::string("debit");
 
+  name = new std::string("Paul Walker");
+  SSN = new std::string("444444444");
+  BankLogic::CreateNewAccount(name, SSN);
+  *name = "John Wayne";
+  *SSN = "999000999";
+  BankLogic::CreateNewAccount(name, SSN);
+  *name = "John newhouse";
+  *SSN = "435222222";
+  BankLogic::CreateNewAccount(name, SSN);
+  BankLogic::CloseAccount(0);
+  delete name;
+  delete SSN;
+  accNum = 1;
   std::cout << "\n\nAddTransaction tests\n\tAccount number does not match an account: " << TrueFalse(BankLogic::AddTransaction(accNum, amt, type)) << std::endl;
   std::cout << "\tAccount number is negative: " << TrueFalse(BankLogic::AddTransaction(-1, amt, type)) << std::endl;
   *amt = -555555;
@@ -108,19 +127,30 @@ int main(){
   delete lname;
 
   name = new std::string("John");
-  std::cout << "\n\nCreate new account tests\n\tOnly a first or last name entered: " << TrueFalse(BankLogic::CreateNewAccount(name, 888666777)) << std::endl;
+  SSN = new std::string("888666777");
+  std::cout << "\n\nCreate new account tests\n\tOnly a first or last name entered: " << TrueFalse(BankLogic::CreateNewAccount(name, SSN)) << std::endl;
   *name = "";
-  std::cout << "\tNo name entered: " << TrueFalse(BankLogic::CreateNewAccount(name, 999111222)) << std::endl;
+  *SSN = "999111222";
+  std::cout << "\tNo name entered: " << TrueFalse(BankLogic::CreateNewAccount(name, SSN)) << std::endl;
   *name = "J@ne doe";
-  std::cout << "\tSpecial Characters entered for name: " << TrueFalse(BankLogic::CreateNewAccount(name, 888222999)) << std::endl;
+  *SSN = "888222999";
+  std::cout << "\tSpecial Characters entered for name: " << TrueFalse(BankLogic::CreateNewAccount(name, SSN)) << std::endl;
   *name = "   ";
-  std::cout << "\tSpaces entered for name: " << TrueFalse(BankLogic::CreateNewAccount(name, 222111455)) << std::endl;
+  *SSN = "222111455";
+  std::cout << "\tSpaces entered for name: " << TrueFalse(BankLogic::CreateNewAccount(name, SSN)) << std::endl;
   *name = "Paul Walker";
-  std::cout << "\tSSN too short: " << TrueFalse(BankLogic::CreateNewAccount(name, 777)) << std::endl;
-  //std::cout << "\tSSN too long: " << TrueFalse(BankLogic::CreateNewAccount(name, 7778886666)) << std::endl;
-  std::cout << "\tSSN not unique: " << TrueFalse(BankLogic::CreateNewAccount(name, 555555555)) << std::endl;
-  std::cout << "\tExpected name and SSN entered: " << TrueFalse(BankLogic::CreateNewAccount(name, 555555555)) << std::endl;
+  *SSN = "333";
+  std::cout << "\tSSN too short: " << TrueFalse(BankLogic::CreateNewAccount(name, SSN)) << std::endl;
+  *SSN = "1117778886666";
+  std::cout << "\tSSN too long: " << TrueFalse(BankLogic::CreateNewAccount(name, SSN)) << std::endl;
+  *SSN = "400558888";
+  *name = "Tom Brady";
+  BankLogic::CreateNewAccount(name, SSN);
+  std::cout << "\tSSN not unique: " << TrueFalse(BankLogic::CreateNewAccount(name, SSN)) << std::endl;
+  *SSN = "555555555";
+  std::cout << "\tExpected name and SSN entered: " << TrueFalse(BankLogic::CreateNewAccount(name, SSN)) << std::endl;
   delete name;
+  delete SSN;
   
   std::cout << "\tAccount number too large: " << TrueFalse(BankLogic::CloseAccount(50)) << std::endl;
   std::cout << "\tAccount number negative: " << TrueFalse(BankLogic::CloseAccount(-2)) << std::endl;
@@ -137,7 +167,8 @@ int main(){
   std::cout << "\n\nRead customer data from bin file when bin file does not exist\n\t" << TrueFalse(BankLogic::ReadCustomersData()) << std::endl;
 
   std::string nam = "James smith";
-  BankLogic::CreateNewAccount(&nam, 222333444);
+  SSN = new std::string("222333444");
+  BankLogic::CreateNewAccount(&nam, SSN);
   std::cout << "\n\nClose all accounts test:\n\tWhen accounts exist: " << TrueFalse(BankLogic::CloseAccounts()) << std::endl;
   std::cout << "\tWhen accounts do not exist: " << TrueFalse(BankLogic::CloseAccounts()) << std::endl;						   
 
@@ -184,7 +215,7 @@ int main(){
   delete name;
   std::cout << "getAccountNumber tests: \n\tSee if account number is greater than -1: " << (-1 < acc->getAccountNumber() ? "passed" : "failed") << std::endl;
 
-  //std::cout << "getSSN tests:\n\tIs SSN 9 digits long: " << (acc->getSSN().length() == 9 ? "passed" : "failed") << std::endl;
+  std::cout << "getSSN tests:\n\tIs SSN 9 digits long: " << (acc->getSSN().length() == 9 ? "passed" : "failed") << std::endl;
 
   std::cout << "getCustomerName tests:\n\tTest if name is an empty string: " << (acc->getCustomerName() != "" ? "passed" : "failed") << std::endl;
 
@@ -196,6 +227,6 @@ int main(){
   std::cout << "\tValue entered is positive: " << TrueFalse(acc->UpdateBalance(amt)) << std::endl;
 
   delete amt;
-  delete name;
+  //delete name;
   return 0;
 }

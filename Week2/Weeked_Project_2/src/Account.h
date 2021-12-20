@@ -17,10 +17,10 @@ namespace BankParts{
     std::string m_lastName;
     int m_accountNum;
     char* m_dateOpened;
-    int m_SSN;
+    std::string m_SSN;
 
-    Account(const std::string* customerName, const int ssn, const int accNum): m_accountNum(accNum), m_SSN(ssn) {
-      
+    Account(const std::string* customerName, const std::string* SSN, const int accNum): m_accountNum(accNum), m_SSN(*SSN) {
+
       m_balance = 0.0f;
       m_firstName = customerName->substr(0, customerName->find(" "));
       m_lastName = customerName->substr(customerName->find(" ") + 1);
@@ -52,7 +52,7 @@ namespace BankParts{
     static Account* CreateAccount(const std::string*, const std::string*, const int);
     const char* getDateOpened();
     const int getAccountNumber();
-    const int getSSN();
+    const std::string getSSN();
     const std::string getCustomerName();
     const float getBalance();
     const bool UpdateBalance(const float*);

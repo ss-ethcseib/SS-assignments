@@ -82,11 +82,27 @@ namespace BankParts{
       return false;
     }
 
+    std::stack<int> tmp;
+    for(int i = 0; i < freeAccountNumbers.size(); i++){
+      if(accNum == freeAccountNumbers.top()){
+	
+        for(int x = 0; x < tmp.size(); x++){
+	  freeAccountNumbers.push(tmp.top());
+	  tmp.pop();
+        }
+	
+        return false;	
+      }
+      tmp.push(freeAccountNumbers.top());
+      freeAccountNumbers.pop();
+    }
+    freeAccountNumbers = tmp;  
+
     if(accNum < accountNum && accNum > -1){
       
       std::cout << "Account info:\n\tNAME: " << customers[accNum]->getCustomerName() << std::endl
 		<< "\tBALANCE: " << customers[accNum]->getBalance() << std::endl
-		<< "\tSSN: " << std::to_string(customers[accNum]->getSSN()).substr(5) << std::endl
+		<< "\tSSN: " << customers[accNum]->getSSN().substr(5) << std::endl
 		<< "\tDATE OPENED: " << customers[accNum]->getDateOpened()
 		<< "\tACCOUNT NUMBER: " << customers[accNum]->getAccountNumber() << std::endl;
       
@@ -100,7 +116,7 @@ namespace BankParts{
   }
   
   const bool BankLogic::AddTransaction(const int accNum, const float* ammount, const std::string* transType){
-
+    
     if(customers.empty()){
       return false;
     }
@@ -110,9 +126,26 @@ namespace BankParts{
       return false;
     }
     
-    
     if(StringToLower(transType) == "credit")
       return true;
+    
+    if(accNum < 0 || accNum >= accountNum)
+      return false;
+
+    std::stack<int> tmp;
+    for(int i = 0; i < freeAccountNumbers.size(); i++){
+
+      if(accNum == freeAccountNumbers.top()){
+	for(int x = 0; x < tmp.size(); x++){
+	  freeAccountNumbers.push(tmp.top());
+	  tmp.pop();
+	}
+	return false;
+      }
+      tmp.push(freeAccountNumbers.top());
+      freeAccountNumbers.pop();
+    }
+    freeAccountNumbers = tmp;
     
     if(!customers[accNum]->UpdateBalance(ammount)){
       return false;
@@ -223,27 +256,36 @@ namespace BankParts{
     return true;
   }
   
-  const bool BankLogic::CreateNewAccount(const std::string* customerName, const int SSN){
+  const bool BankLogic::CreateNewAccount(const std::string* customerName, const std::string* SSN){
 
+    if(customerName == nullptr || SSN == nullptr)
+      return false;
+    if(*customerName == "" || *SSN == "")
+      return false;
+
+    if(SSN->length() != 9 || !isdigits(SSN))
+      return false;
+
+    if(customerName->find(" ") == std::string::npos)
+      return false;
+  
     bool ssnExists = false;
     Account* acc = nullptr;
     
     for(std::unordered_map<int, Account*>::iterator it = customers.begin();
 	it != customers.end(); it++){
-      if(it->second->getSSN() == SSN){
+      if(it->second->getSSN() == *SSN){
 	ssnExists = true;
       }
     }
-    std::string* ssn = new std::string(std::to_string(SSN));
+    
     if(!ssnExists){
       if(!freeAccountNumbers.empty()){
-	acc = Account::CreateAccount(customerName, ssn, freeAccountNumbers.top());
+	acc = Account::CreateAccount(customerName, SSN, freeAccountNumbers.top());
 	freeAccountNumbers.pop();
-	delete ssn;
       }
       else{
-        acc = Account::CreateAccount(customerName, ssn, accountNum++);
-	delete ssn;
+        acc = Account::CreateAccount(customerName, SSN, accountNum++);
       }
       if(acc == nullptr)
 	return false;
@@ -282,6 +324,7 @@ namespace BankParts{
     
     for(std::unordered_map<int, Account*>::iterator it = customers.begin();
 	it != customers.end(); it++){
+      freeAccountNumbers.push(it->second->getAccountNumber());
       delete it->second;
     }
     customers.clear();
@@ -342,8 +385,9 @@ namespace BankParts{
     }
 
     for(int i = 0; i < accountNum; i++){
-      if(nums[i] == 0)
+      if(nums[i] != 1){
 	freeAccountNumbers.push(i);
+      }
     }
     
     delete[] nums;

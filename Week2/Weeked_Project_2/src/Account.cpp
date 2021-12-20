@@ -21,18 +21,12 @@ namespace BankParts{
       nameCheck = false;
 
     if(SSN->length() == 9 && isdigits(SSN) &&
-       isalphabet(customerName) && nameCheck){
-      
-      if(std::stoi(*SSN) > 0){
-	
-	acc = new Account(customerName, std::stoi(*SSN), accNum);
-      }
-      else
-	return nullptr;
-      
-      return acc; 
-    }
-    return nullptr;
+       isalphabet(customerName) && nameCheck)
+      	
+      acc = new Account(customerName, SSN, accNum);
+    else
+      return nullptr;
+    return acc; 
   }
   
   const float Account::getBalance(){
@@ -62,7 +56,7 @@ namespace BankParts{
     return m_accountNum;
   }
   
-  const int Account::getSSN(){
+  const std::string Account::getSSN(){
     
     return m_SSN;
   }  

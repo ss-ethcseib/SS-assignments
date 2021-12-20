@@ -17,7 +17,8 @@ RUN yum install -y cscope
 RUN yum install -y tree
 RUN yum install -y clang
 RUN yum install -y htop
-RUN yum install -y valgrind 
+RUN yum install -y valgrind
+RUN yum install -y protobuf-devel
 RUN yum install -y protobuff-compiler
 
 COPY src/* src/

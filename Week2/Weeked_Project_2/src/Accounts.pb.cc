@@ -120,7 +120,7 @@ void AddDescriptorsImpl() {
   static const char descriptor[] GOOGLE_PROTOBUF_ATTRIBUTE_SECTION_VARIABLE(protodesc_cold) = {
       "\n\016Accounts.proto\"_\n\tPBAccount\022\017\n\007balance"
       "\030\001 \001(\002\022\014\n\004name\030\002 \001(\t\022\022\n\naccountNum\030\003 \001(\005"
-      "\022\022\n\ndateOpened\030\004 \001(\t\022\013\n\003SSN\030\005 \001(\005\"*\n\nPBA"
+      "\022\022\n\ndateOpened\030\004 \001(\t\022\013\n\003SSN\030\005 \001(\t\"*\n\nPBA"
       "ccounts\022\034\n\010accounts\030\001 \003(\0132\n.PBAccountb\006p"
       "roto3"
   };
@@ -173,18 +173,23 @@ PBAccount::PBAccount(const PBAccount& from)
   if (from.dateopened().size() > 0) {
     dateopened_.AssignWithDefault(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), from.dateopened_);
   }
+  ssn_.UnsafeSetDefault(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+  if (from.ssn().size() > 0) {
+    ssn_.AssignWithDefault(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), from.ssn_);
+  }
   ::memcpy(&balance_, &from.balance_,
-    static_cast<size_t>(reinterpret_cast<char*>(&ssn_) -
-    reinterpret_cast<char*>(&balance_)) + sizeof(ssn_));
+    static_cast<size_t>(reinterpret_cast<char*>(&accountnum_) -
+    reinterpret_cast<char*>(&balance_)) + sizeof(accountnum_));
   // @@protoc_insertion_point(copy_constructor:PBAccount)
 }
 
 void PBAccount::SharedCtor() {
   name_.UnsafeSetDefault(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
   dateopened_.UnsafeSetDefault(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+  ssn_.UnsafeSetDefault(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
   ::memset(&balance_, 0, static_cast<size_t>(
-      reinterpret_cast<char*>(&ssn_) -
-      reinterpret_cast<char*>(&balance_)) + sizeof(ssn_));
+      reinterpret_cast<char*>(&accountnum_) -
+      reinterpret_cast<char*>(&balance_)) + sizeof(accountnum_));
 }
 
 PBAccount::~PBAccount() {
@@ -195,6 +200,7 @@ PBAccount::~PBAccount() {
 void PBAccount::SharedDtor() {
   name_.DestroyNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
   dateopened_.DestroyNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+  ssn_.DestroyNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
 }
 
 void PBAccount::SetCachedSize(int size) const {
@@ -219,9 +225,10 @@ void PBAccount::Clear() {
 
   name_.ClearToEmptyNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
   dateopened_.ClearToEmptyNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+  ssn_.ClearToEmptyNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
   ::memset(&balance_, 0, static_cast<size_t>(
-      reinterpret_cast<char*>(&ssn_) -
-      reinterpret_cast<char*>(&balance_)) + sizeof(ssn_));
+      reinterpret_cast<char*>(&accountnum_) -
+      reinterpret_cast<char*>(&balance_)) + sizeof(accountnum_));
   _internal_metadata_.Clear();
 }
 
@@ -295,14 +302,16 @@ bool PBAccount::MergePartialFromCodedStream(
         break;
       }
 
-      // int32 SSN = 5;
+      // string SSN = 5;
       case 5: {
         if (static_cast< ::google::protobuf::uint8>(tag) ==
-            static_cast< ::google::protobuf::uint8>(40u /* 40 & 0xFF */)) {
-
-          DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
-                   ::google::protobuf::int32, ::google::protobuf::internal::WireFormatLite::TYPE_INT32>(
-                 input, &ssn_)));
+            static_cast< ::google::protobuf::uint8>(42u /* 42 & 0xFF */)) {
+          DO_(::google::protobuf::internal::WireFormatLite::ReadString(
+                input, this->mutable_ssn()));
+          DO_(::google::protobuf::internal::WireFormatLite::VerifyUtf8String(
+            this->ssn().data(), static_cast<int>(this->ssn().length()),
+            ::google::protobuf::internal::WireFormatLite::PARSE,
+            "PBAccount.SSN"));
         } else {
           goto handle_unusual;
         }
@@ -365,9 +374,14 @@ void PBAccount::SerializeWithCachedSizes(
       4, this->dateopened(), output);
   }
 
-  // int32 SSN = 5;
-  if (this->ssn() != 0) {
-    ::google::protobuf::internal::WireFormatLite::WriteInt32(5, this->ssn(), output);
+  // string SSN = 5;
+  if (this->ssn().size() > 0) {
+    ::google::protobuf::internal::WireFormatLite::VerifyUtf8String(
+      this->ssn().data(), static_cast<int>(this->ssn().length()),
+      ::google::protobuf::internal::WireFormatLite::SERIALIZE,
+      "PBAccount.SSN");
+    ::google::protobuf::internal::WireFormatLite::WriteStringMaybeAliased(
+      5, this->ssn(), output);
   }
 
   if ((_internal_metadata_.have_unknown_fields() &&  ::google::protobuf::internal::GetProto3PreserveUnknownsDefault())) {
@@ -416,9 +430,15 @@ void PBAccount::SerializeWithCachedSizes(
         4, this->dateopened(), target);
   }
 
-  // int32 SSN = 5;
-  if (this->ssn() != 0) {
-    target = ::google::protobuf::internal::WireFormatLite::WriteInt32ToArray(5, this->ssn(), target);
+  // string SSN = 5;
+  if (this->ssn().size() > 0) {
+    ::google::protobuf::internal::WireFormatLite::VerifyUtf8String(
+      this->ssn().data(), static_cast<int>(this->ssn().length()),
+      ::google::protobuf::internal::WireFormatLite::SERIALIZE,
+      "PBAccount.SSN");
+    target =
+      ::google::protobuf::internal::WireFormatLite::WriteStringToArray(
+        5, this->ssn(), target);
   }
 
   if ((_internal_metadata_.have_unknown_fields() &&  ::google::protobuf::internal::GetProto3PreserveUnknownsDefault())) {
@@ -452,6 +472,13 @@ size_t PBAccount::ByteSizeLong() const {
         this->dateopened());
   }
 
+  // string SSN = 5;
+  if (this->ssn().size() > 0) {
+    total_size += 1 +
+      ::google::protobuf::internal::WireFormatLite::StringSize(
+        this->ssn());
+  }
+
   // float balance = 1;
   if (this->balance() != 0) {
     total_size += 1 + 4;
@@ -462,13 +489,6 @@ size_t PBAccount::ByteSizeLong() const {
     total_size += 1 +
       ::google::protobuf::internal::WireFormatLite::Int32Size(
         this->accountnum());
-  }
-
-  // int32 SSN = 5;
-  if (this->ssn() != 0) {
-    total_size += 1 +
-      ::google::protobuf::internal::WireFormatLite::Int32Size(
-        this->ssn());
   }
 
   int cached_size = ::google::protobuf::internal::ToCachedSize(total_size);
@@ -506,14 +526,15 @@ void PBAccount::MergeFrom(const PBAccount& from) {
 
     dateopened_.AssignWithDefault(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), from.dateopened_);
   }
+  if (from.ssn().size() > 0) {
+
+    ssn_.AssignWithDefault(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), from.ssn_);
+  }
   if (from.balance() != 0) {
     set_balance(from.balance());
   }
   if (from.accountnum() != 0) {
     set_accountnum(from.accountnum());
-  }
-  if (from.ssn() != 0) {
-    set_ssn(from.ssn());
   }
 }
 
@@ -545,9 +566,10 @@ void PBAccount::InternalSwap(PBAccount* other) {
     GetArenaNoVirtual());
   dateopened_.Swap(&other->dateopened_, &::google::protobuf::internal::GetEmptyStringAlreadyInited(),
     GetArenaNoVirtual());
+  ssn_.Swap(&other->ssn_, &::google::protobuf::internal::GetEmptyStringAlreadyInited(),
+    GetArenaNoVirtual());
   swap(balance_, other->balance_);
   swap(accountnum_, other->accountnum_);
-  swap(ssn_, other->ssn_);
   _internal_metadata_.Swap(&other->_internal_metadata_);
 }
 

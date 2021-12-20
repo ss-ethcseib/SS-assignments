@@ -5,7 +5,7 @@ message PBAccount{
 	string name = 2;
 	int32 accountNum = 3;
 	string dateOpened = 4;
-	int32 SSN = 5;
+	string SSN = 5;
 }
 
 message PBAccounts{

@@ -41,7 +41,7 @@ namespace BankParts{
     static const bool DisplayAccount(const int);
     static const bool AddTransaction(const int, const float*, const std::string*);
     static const bool SearchName(const std::string*, const std::string*);
-    static const bool CreateNewAccount(const std::string*, const int);
+    static const bool CreateNewAccount(const std::string*, const std::string*);
     static const bool CloseAccount(const int);
     static const bool CloseAccounts();
     static const bool WriteCustomersData();
