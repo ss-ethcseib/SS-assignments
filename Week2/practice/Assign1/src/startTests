@@ -1,0 +1,10 @@
+#!/bin/bash
+
+clear
+
+#make test > /dev/null
+clang++ tests.cpp BigNumber.cpp -pthread -lgtest
+#./test
+./a.out
+rm -r a.out
+#make clean > /dev/null
