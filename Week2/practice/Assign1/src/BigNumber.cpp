@@ -33,8 +33,10 @@ void BigNumber::PrintVector(const BigNumber::numvec& vec){
   numvec::const_iterator it1 = vec.begin();
   std::vector<unsigned char>::const_iterator it2 = it1->begin();
 
+  int digitCount = 0;
   for(; it2 != it1->end(); it2++){
     std::cout << *it2;
+    digitCount++;
   }
   std::cout << std::endl << "x";
 
@@ -42,11 +44,15 @@ void BigNumber::PrintVector(const BigNumber::numvec& vec){
   for(it2 = it1->begin(); it2 != it1->end(); it2++){
     std::cout << *it2;
   }
-
-  int count = 1;
+  
+  it1++;
+  int count = 0;
+  std::cout << std::endl;
   for(; it1 != vec.end(); it1++){
-    if(count % 2 == 0)
+
+    if(count % digitCount == 0)
       std::cout << "------" << std::endl;
+    
     for(it2 = it1->begin(); it2 != it1->end(); it2++){
       std::cout << *it2;
     }
@@ -100,11 +106,12 @@ BigNumber::numvec BigNumber::simulate_multiply(const BigNumber num){
 
   arrNum1[size1 - 1] = num1 % 10;
   num1 /= 10;
-  chars.push_back(arrNum1[size1 - 1]);
+  chars.push_back(48 + arrNum1[size1 - 1]);
+
   std::vector<unsigned char>::iterator it = chars.begin();
   for(int i = size1 - 2; i > -1; i--){
     arrNum1[i] = num1 % 10;
-    chars.insert(chars.begin(), arrNum1[i]);
+    chars.insert(chars.begin(), 48 + arrNum1[i]);
     
     num1 /= 10;
   }
@@ -114,10 +121,9 @@ BigNumber::numvec BigNumber::simulate_multiply(const BigNumber num){
   for(int i = size2 - 1; i > -1; i--){
     
     arrNum2[i] = num2 % 10;  
-    chars.insert(it, arrNum2[i]);
+    chars.insert(chars.begin(), 48 + arrNum2[i]);
     num2 /= 10;
   }
-
   vec.push_back(chars);
   chars.clear();
   
@@ -126,6 +132,7 @@ BigNumber::numvec BigNumber::simulate_multiply(const BigNumber num){
   long long int total = 0;
   int factor = 1;
   
+
   for(int x = size2 - 1; x > -1; x--){
     for(int y = size1 - 1; y > -1; y--){
       

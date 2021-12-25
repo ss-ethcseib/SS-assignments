@@ -20,6 +20,8 @@ TEST(Constructor_tests, Overflow_Value){
 TEST(Simulate_Multiply_Tests, PositiveNos){
   BigNumber num1(125), num2(2);
   std::vector<std::vector<unsigned char>> test = {{'1', '2', '5'}, {'2'},
+						  {'0'}, {'5', '0'},
+						  {'2', '0', '0'},
 						  {'2', '5', '0'}};
   std::vector<std::vector<unsigned char>> vec = num1.simulate_multiply(num2);
 
