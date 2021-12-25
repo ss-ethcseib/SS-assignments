@@ -2,8 +2,9 @@
 
 clear
 
-make test > /dev/null
-
-./test
-
-make clean > /dev/null
+#make test > /dev/null
+clang++ tests.cpp BigNumber.cpp -pthread -lgtest
+#./test
+./a.out
+rm -r a.out
+#make clean > /dev/null
