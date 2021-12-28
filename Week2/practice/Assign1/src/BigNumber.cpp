@@ -34,28 +34,46 @@ void BigNumber::PrintVector(const BigNumber::numvec& vec){
   std::vector<unsigned char>::const_iterator it2 = it1->begin();
 
   int digitCount = 0;
+  int fillWidth = 0;
+  fillWidth = it1->size();
+
+  if(fillWidth < (it1 + 1)->size()){
+    fillWidth = (it1 + 1)->size();
+  }
+
+  std::cout << std::setw(fillWidth) << std::right;
   for(; it2 != it1->end(); it2++){
     std::cout << *it2;
     digitCount++;
   }
-  std::cout << std::endl << "x";
 
+  std::cout << std::endl << "x";
+  
   it1++;
-  for(it2 = it1->begin(); it2 != it1->end(); it2++){
+  it2 = it1->begin();
+
+  std::cout << std::setw(fillWidth + 1) << std::right;
+  for(; it2 != it1->end(); it2++){
     std::cout << *it2;
   }
   
   it1++;
   int count = 0;
-  std::cout << std::endl;
-  for(; it1 != vec.end(); it1++){
 
-    if(count % digitCount == 0)
-      std::cout << "------" << std::endl;
+  for(; it1 != vec.end(); it1++){
+    fillWidth = it1->size();
     
-    for(it2 = it1->begin(); it2 != it1->end(); it2++){
-      std::cout << *it2;
+    if(count % digitCount == 0){
+      std::cout << std::endl << std::setw(fillWidth + 2) << std::setfill('-') << "";
+      std::setfill("");
     }
+    //std::cout << std::endl;
+    std::string str = "";
+    for(it2 = it1->begin(); it2 != it1->end(); it2++){
+      str += *it2;
+    }
+    std::cout << std::endl << std::setfill(' ') << std::setw(fillWidth + 2) << std::right << str;
+
     count++;
     std::cout << std::endl;
   }
@@ -68,7 +86,7 @@ BigNumber::numvec BigNumber::simulate_multiply(const BigNumber num){
   int size2 = 0;
   long num1 = std::stol(this->number());
   long num2 = std::stol(num.number());
-  
+
   if(num1 < 0 && num2 < 0){
     
     size1 = std::log10(num1 * -1) + 1;
@@ -98,7 +116,6 @@ BigNumber::numvec BigNumber::simulate_multiply(const BigNumber num){
     size1 = size2;
     size2 = tmp;  
   }
-  //std::cout << std::endl << "  " << num1 << std::endl << "x " << num2 << std::endl << "________" << std::endl;
   
   int* arrNum1 = new int[size1];
   int* arrNum2 = new int[size2];
@@ -108,7 +125,6 @@ BigNumber::numvec BigNumber::simulate_multiply(const BigNumber num){
   num1 /= 10;
   chars.push_back(48 + arrNum1[size1 - 1]);
 
-  std::vector<unsigned char>::iterator it = chars.begin();
   for(int i = size1 - 2; i > -1; i--){
     arrNum1[i] = num1 % 10;
     chars.insert(chars.begin(), 48 + arrNum1[i]);
@@ -132,7 +148,7 @@ BigNumber::numvec BigNumber::simulate_multiply(const BigNumber num){
   long long int total = 0;
   int factor = 1;
   
-
+  //Begin multiplication
   for(int x = size2 - 1; x > -1; x--){
     for(int y = size1 - 1; y > -1; y--){
       
@@ -151,13 +167,7 @@ BigNumber::numvec BigNumber::simulate_multiply(const BigNumber num){
       }
       
       product = product * std::pow(10, size1 - y - 1) * factor;
-      std::string str = std::to_string(product);
-
-      for(std::string::iterator it = str.begin(); it != str.end(); it++){
-	chars.push_back(*it);
-      }
-      vec.push_back(chars);
-      chars.clear();
+      
       total += product;
     }
     std::string str = std::to_string(total);
@@ -167,17 +177,9 @@ BigNumber::numvec BigNumber::simulate_multiply(const BigNumber num){
     vec.push_back(chars);
     chars.clear();
     
-    //std::cout << "+ " << total << std::endl;
     factor = std::pow(10, size2 - x);  
   }
   
-  /*if(total <= INT_MAX && total >= INT_MIN){
-    output.set(total); 
-  }
-  else{
-    std::string str = std::to_string(total);
-    output.set(&str); 
-    }*/
   delete[] arrNum1;
   delete[] arrNum2;
 
@@ -186,11 +188,17 @@ BigNumber::numvec BigNumber::simulate_multiply(const BigNumber num){
 }
 
 void BigNumber::multiply(BigNumber& output){
+
+  long num1 = std::stol(this->number());
+  long num2 = std::stol(output.number());
+  
+  if(num1 * num2 <= INT_MAX && INT_MIN <= num1 * num2){
+    output.set(num1 * num2);
+    return;
+  }
   
   int size1 = 0;
   int size2 = 0;
-  long num1 = std::stol(this->number());
-  long num2 = std::stol(output.number());
   
   if(num1 < 0 && num2 < 0){
     size1 = std::log10(num1 * -1) + 1;  

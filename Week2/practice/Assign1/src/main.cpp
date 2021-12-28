@@ -7,7 +7,6 @@ bool isdigits(std::string*);
 bool isdigits(char*);
 
 int main(int argc, char** args){
-
   if(argc == 3){
     
     assert(isdigits(args[1]));
