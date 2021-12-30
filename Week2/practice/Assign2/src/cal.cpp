@@ -19,8 +19,8 @@ int main(int argc, char** args){
 
     assert(month <= 12 && month >= 0);
 
-    Calendar cal(month, year);
-    
+    Calendar cal(month - 1, year);
+    cal.print();
   }
   else{
     
@@ -38,8 +38,11 @@ int main(int argc, char** args){
 
     assert(month <= 12 && month >= 0);
 
-    Calendar cal(month, year);
+    Calendar cal(month - 1, year);
+    cal.print();
   }
+
+  return 0;
 }
 
 bool isdigits(const char* str){

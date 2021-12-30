@@ -1,5 +1,6 @@
 #!/bin/bash
 
+clear
 make > /dev/null
 
 ./cal $1 $2

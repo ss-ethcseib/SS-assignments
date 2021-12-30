@@ -1,6 +1,8 @@
 #pragma once
 
 #include <iostream>
+#include <ctime>
+#include <math.h>
 
 class Calendar{
 private:
@@ -10,21 +12,17 @@ public:
   Calendar(int month, int year){
     
     set(month, year);
-    calendar = new int**[7];
-    for(int i = 0; i < 7; i++){
-      calendar[i] = new int*[6];
-      calendar[i][5] = nullptr;
+  }
+
+  ~Calendar(){
+    int i = 0;
+
+    while(calendar[i] != nullptr){
+      delete[] calendar[i];
+      i++;
     }
 
-    int index = 0;
-    for(int i = 0; i < days[month]; i++){
-      
-      calendar[i % 7][index] = i;
-	if(i != 0){
-	  if(i % 7 == 0)
-	    index++;
-	}
-    }
+    delete calendar;
   }
   
   int** get() const;
