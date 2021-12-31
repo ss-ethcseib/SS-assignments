@@ -17,11 +17,79 @@ void Calendar::print() const{
   if(calendar == nullptr)
     return;
   
+
+  switch (month){
+
+  case months::January:
+    std::cout << std::setw(3) << "" << "January " << year << std::endl;
+    break;
+  case months::February:
+    std::cout << std::setw(3) << "" << "February " << year <<
+std::endl;
+    break;
+
+  case months::March:
+    std::cout << std::setw(3) << "" << "March " << year << std::endl;
+    break;
+
+  case months::April:
+    std::cout << std::setw(3) << "" << "April " << year << std::endl;
+    break;
+
+  case months::May:
+    std::cout << std::setw(3) << "" << "May " << year << std::endl;
+    break;
+
+  case months::June:
+    std::cout << std::setw(3) << "" << "June " << year << std::endl;
+    break;
+
+  case months::July:
+    std::cout << std::setw(3) << "" << "July " << year << std::endl;
+    break;
+
+  case months::August:
+    std::cout << std::setw(3) << "" << "August " << year << std::endl;
+    break;
+
+  case months::September:
+    std::cout << std::setw(3) << "" << "September " << year << std::endl;
+    break;
+
+  case months::October:
+    std::cout << std::setw(3) << "" << "October " << year << std::endl;
+    break;
+
+  case months::November:
+    std::cout << std::setw(3) << "" << "November " << year << std::endl;
+    break;
+
+  case months::December:
+    std::cout << std::setw(3) << "" << "December " << year << std::endl;
+    break;
+    
+  default:
+    break;
+  }
+
+  std::cout << "Su ";
+  std::cout << "Mo ";
+  std::cout << "Tu ";
+  std::cout << "We ";
+  std::cout << "Th ";
+  std::cout << "Fr ";
+  std::cout << "Sa " << std::endl;
+  
   int i = 0;
   while(calendar[i] != nullptr){
     for(int x = 0; x < 7; x++){
-      std::cout << "Day: " << calendar[i][x] << std::endl;
+      if(calendar[i][x] != -1){
+	std::cout << std::setw(2) << std::setfill(' ') << calendar[i][x] << " ";
+      }
+      else
+	std::cout << std::setw(3) << std::setfill(' ') << "";
     }
+    std::cout << std::endl;
     i++;
   }
 }

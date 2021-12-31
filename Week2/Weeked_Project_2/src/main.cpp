@@ -6,8 +6,6 @@
 
 using namespace BankParts;
 
-std::string getPassword(char);
-
 int main(int argc, char** args){
 
   std::string username = "";
@@ -21,15 +19,14 @@ int main(int argc, char** args){
     
     std::cout << "Password: ";
     std::cin >> password;
-    //password = getPassword('*');
 
     if(BankLogic::UserAuthorization(&username, &password)){
       cont = false;
       errCount = 0;
     }
-    else
+    else{
       std::cout << "Wrong username or password.\n";
-    
+    }
     if(errCount == 2){
       std::cout << "Failed to login: Too many attempts made.\n";
       return -1;
@@ -255,6 +252,6 @@ int main(int argc, char** args){
 
   BankLogic::WriteCustomersData();
   BankLogic::CloseAccounts();
-  
+
   return 0;
 }

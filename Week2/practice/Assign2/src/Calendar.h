@@ -3,15 +3,24 @@
 #include <iostream>
 #include <ctime>
 #include <math.h>
-#include <assert.h>
+#include <iomanip>
 
 class Calendar{
 private:
+  enum months{
+	      January = 0, February, March,
+	      April, May, June, July, August,
+	      September, October, November, December
+  };
+  months month;
+  int year;
   static int days[12];
   int** calendar;
 public:  
-  Calendar(int month, int year){
+  Calendar(int month, int year): month(months(month)), year(year){
+    
     calendar = nullptr;
+    
     set(month, year);
   }
 

@@ -13,9 +13,25 @@ namespace BankParts{
     CryptoPP::AutoSeededRandomPool prng;
     CryptoPP::HexEncoder encoder;//(new CryptoPP::FileSink(std::cout));
 
-    std::byte* key_vals = new std::byte[CryptoPP::AES::DEFAULT_KEYLENGTH] {(std::byte)24, (std::byte)56,(std::byte)054,(std::byte)19,(std::byte)36,(std::byte)22,(std::byte)32,(std::byte)19,(std::byte)68,(std::byte)16,(std::byte)16,(std::byte)115,(std::byte)18,(std::byte)159,(std::byte)56,(std::byte)043};
+    std::byte* key_vals = new std::byte[CryptoPP::AES::DEFAULT_KEYLENGTH]
+			     {
+			       (std::byte)24,(std::byte)56,(std::byte)054,
+			       (std::byte)19,(std::byte)36,(std::byte)22,
+			       (std::byte)32,(std::byte)19,(std::byte)68,
+			       (std::byte)16,(std::byte)16,(std::byte)115,
+			       (std::byte)18,(std::byte)159,(std::byte)56,
+			       (std::byte)043
+			     };
 
-    std::byte* iv_vals = new std::byte[CryptoPP::AES::BLOCKSIZE] {(std::byte)241,(std::byte)212,(std::byte)241,(std::byte)61,(std::byte)41,(std::byte)66,(std::byte)100,(std::byte)36,(std::byte)240,(std::byte)244,(std::byte)79,(std::byte)156,(std::byte)97,(std::byte)28,(std::byte)84,(std::byte)235};
+    std::byte* iv_vals = new std::byte[CryptoPP::AES::BLOCKSIZE]
+			    {
+			      (std::byte)241,(std::byte)212,(std::byte)241,
+			      (std::byte)61,(std::byte)41,(std::byte)66,
+			      (std::byte)100,(std::byte)36,(std::byte)240,
+			      (std::byte)244,(std::byte)79,(std::byte)156,
+			      (std::byte)97,(std::byte)28,(std::byte)84,
+			      (std::byte)235
+			    };
     
     //key_vals = {};
     //prng.GenerateBlock(key_vals, CryptoPP::AES::DEFAULT_KEYLENGTH);

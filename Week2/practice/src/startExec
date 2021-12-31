@@ -1,9 +1,0 @@
-#!/bin/bash
-
-clear
-
-make > /dev/null
-
-./exec $1 $2
-
-make clean > /dev/null
