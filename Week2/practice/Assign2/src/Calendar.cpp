@@ -5,11 +5,18 @@ int Calendar::days[] = {31, 28, 31, 30,
 		  30, 31, 30, 31};
 
 int** Calendar::get() const{
+  if(calendar == nullptr){
+    return nullptr;
+  }
+  
   return calendar;
 }
 
 void Calendar::print() const{
 
+  if(calendar == nullptr)
+    return;
+  
   int i = 0;
   while(calendar[i] != nullptr){
     for(int x = 0; x < 7; x++){
@@ -21,7 +28,9 @@ void Calendar::print() const{
 
 void Calendar::set(int month, int year){
 
-
+  if(month > 11 || month < 0 || year < 0){
+    return;
+  }
   double yearCheck1 = (double)year/4;
   int yearCheck2 = (int)(year/4);
   int dayCount = days[month];

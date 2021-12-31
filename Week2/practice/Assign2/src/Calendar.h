@@ -3,6 +3,7 @@
 #include <iostream>
 #include <ctime>
 #include <math.h>
+#include <assert.h>
 
 class Calendar{
 private:
@@ -10,19 +11,21 @@ private:
   int** calendar;
 public:  
   Calendar(int month, int year){
-    
+    calendar = nullptr;
     set(month, year);
   }
 
   ~Calendar(){
-    int i = 0;
-
-    while(calendar[i] != nullptr){
-      delete[] calendar[i];
-      i++;
+    if(calendar != nullptr){
+      int i = 0;
+      
+      while(calendar[i] != nullptr){
+	delete[] calendar[i];
+	i++;
+      }
+      
+      delete calendar;
     }
-
-    delete calendar;
   }
   
   int** get() const;

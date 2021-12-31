@@ -18,6 +18,9 @@ RUN yum install -y tree
 RUN yum install -y clang
 RUN yum install -y htop
 RUN yum install -y valgrind 
+RUN yum --enablerepo=powertools install -y gtest
+RUN dnf --enablerepo=powertools install -y gtest-devel
+
 
 COPY src/* src/
 

@@ -17,7 +17,7 @@ int main(int argc, char** args){
     int month = std::stoi(monthStr);
     int year = std::stoi(yearStr);
 
-    assert(month <= 12 && month >= 0);
+    //    assert(month <= 12 && month >= 0);
 
     Calendar cal(month - 1, year);
     cal.print();
@@ -41,7 +41,6 @@ int main(int argc, char** args){
     Calendar cal(month - 1, year);
     cal.print();
   }
-
   return 0;
 }
 

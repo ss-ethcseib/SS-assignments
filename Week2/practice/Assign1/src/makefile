@@ -14,11 +14,11 @@ main.o: main.cpp
 BigNumber.o: BigNumber.cpp BigNumber.h
 	clang++ $(cflags) BigNumber.cpp
 
-test: tests.o BigNumber.o -lpthread -lgtest
-	clang++ -o test tests.o BigNumber.o
+test: tests.o BigNumber.o 
+	clang++ -o test tests.o BigNumber.o -lpthread -lgtest
 
 tests.o: tests.cpp 
 	clang++ $(cflags) tests.cpp
 
 clean:
-	rm -r *.o $(target)
+	rm -r *.o $(target) test
