@@ -49,6 +49,7 @@ char* MyString::operator+(MyString* str){
     newC_str[x] = str->c_str[i];
     x++;
   }
+  
   return newC_str;
 }
 
@@ -145,15 +146,48 @@ bool MyString::operator==(MyString* str){
     return false;
   
   int i = 0;
-  for(; this->c_str[i] == str->c_str[i]; i++);
-  std::cout << "\n\n check\n " << i << " " << size1 << " " << str->c_str;
+  for(; i < size1 + 1 && this->c_str[i] == str->c_str[i]; i++);
+  
   if(i - 1 == size1){
-    return true;std::cout << "\n\npass\n";
+    return true;
   }
   else
     return false;
   
   return true;
+}
+
+bool MyString::operator==(char* c_str){
+  
+  if(this->c_str == nullptr && c_str == nullptr)
+    return true;
+  
+  else if(this->c_str == nullptr && c_str != nullptr)
+    return false;
+  
+  else if(this->c_str != nullptr && c_str == nullptr)
+    return false;
+  
+  int size1 = 0;
+  for(; this->c_str[size1] != '\0'; size1++);
+  
+  int size2 = 0;
+  for(; c_str[size2] != '\0'; size2++);
+
+  if(size1 != size2)
+    return false;
+    
+  int i = 0;
+  for(; i < size1 + 1 && this->c_str[i] == c_str[i]; i++);
+  
+  if(i - 1 == size1){
+    return true;                                                             
+  }
+  
+  else
+    return false;
+
+  return true; 
 }
 
 const char* MyString::getString(){

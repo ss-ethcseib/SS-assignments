@@ -1,5 +1,6 @@
+/*Developed by: Ethan Seiber*/
+
 #pragma once
-#include <iostream>
 
 class MyString{
  private:
@@ -66,6 +67,7 @@ class MyString{
 
   bool operator==(MyString&);
   bool operator==(MyString*);
-
+  bool operator==(char*);
+  
   const char* getString();
 };
