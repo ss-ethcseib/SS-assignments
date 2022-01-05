@@ -1,0 +1,24 @@
+target1 = exec
+target2 = tests
+objs = MyString.o
+cflags = -c -Wall -g
+libraries = -pthread -lgtest
+
+all:$(target1) $(target2)
+
+$(target1): main.o $(objs)
+	clang++ -o $(target1) main.o $(objs)
+
+main.o: main.cpp
+	clang++ $(cflags) main.cpp
+
+MyString.o: MyString.cpp MyString.h
+	clang++ $(cflags) MyString.cpp
+
+$(target2): tests.o $(objs)
+	clang++ -o $(target2) tests.o $(objs) $(libraries)
+
+tests.o: tests.cpp
+	clang++ $(cflags) tests.cpp 
+clean:
+	rm -r *.o $(target1) $(target2)
