@@ -54,20 +54,20 @@ class MyString{
     str.c_str = nullptr;
   }
 
-  char* operator+(MyString&);
-  char* operator+(MyString*);
+  MyString& operator+(MyString&);
+  //MyString& operator+(MyString*);
 
-  char* operator*(int);
+  MyString& operator*(int);
 
   char operator[](int);
 
   void operator=(const char&);
-  void operator=(const char*);
+  //void operator=(const char*);
   void operator=(MyString&&);
 
   bool operator==(MyString&);
-  bool operator==(MyString*);
-  bool operator==(char*);
-  
+  //bool operator==(MyString*);
+  bool operator==(char*);  
+
   const char* getString();
 };

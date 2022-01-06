@@ -1,6 +1,8 @@
 #include "Person.h"
-Person** Person::persons = new Person*[]{nullptr, nullptr, nullptr, nullptr, nullptr, nullptr,
-                                         nullptr, nullptr, nullptr, nullptr};
+Person** Person::persons = new Person*[]{
+					nullptr, nullptr, nullptr, nullptr,
+                                          nullptr, nullptr,nullptr, nullptr,
+					  nullptr, nullptr};
 
 Person::Person(std::string n) {
 
@@ -8,7 +10,6 @@ Person::Person(std::string n) {
     this->name = n;
     for (int i = 0; i < 10; i++) {
         if (persons[i] == nullptr) {
-            //Person* person = new Person(n, 0);
             this->index = i;
             persons[i] = this;
             return;
@@ -16,7 +17,6 @@ Person::Person(std::string n) {
 
         else if (this->name == persons[i]->name) {
 
-            //Person* person = new Person(n, persons[i]->count);
             this->count += persons[i]->count;
             this->index = i;
 

@@ -23,37 +23,32 @@ void MyString::strcpy(char*& dest, const char* src){
   dest[i] = src[i];
 }
 
-char* MyString::operator+(MyString& str){
-  return this->operator+(&str);
-}
-
-char* MyString::operator+(MyString* str){
-
-  if(str == nullptr)
-    return nullptr;
+MyString& MyString::operator+(MyString& str){
 
   int size1 = 0;
   for(; this->c_str[size1] != '\0'; size1++);
-
+  
   int size2 = 0;
-  for(; str->c_str[size2] != '\0'; size2++);
-
+  for(; str.c_str[size2] != '\0'; size2++);
+  
   char* newC_str = new char[size1 + size2 - 1];
   
   for(int i = 0; i < size1; i++){
+    
     newC_str[i] = this->c_str[i];
   }
-
+  
   int x = size1;
   for(int i = 0; i < size2 + 1; i++){
-    newC_str[x] = str->c_str[i];
+    
+    newC_str[x] = str.c_str[i];                                             
     x++;
   }
   
-  return newC_str;
+  return *this;
 }
 
-char* MyString::operator*(int amt){
+MyString& MyString::operator*(int amt){
 
   int size = 0;
   for(; this->c_str[size] != '\0'; size++);
@@ -66,7 +61,13 @@ char* MyString::operator*(int amt){
       newC_str[i] = this->c_str[i % size];
   }
   newC_str[i] = '\0';
-  return newC_str;
+
+  if(this->c_str != nullptr)
+    delete[] this->c_str;
+
+  this->c_str = newC_str;
+
+  return *this;
 }
 
 char MyString::operator[](int index){
@@ -74,37 +75,8 @@ char MyString::operator[](int index){
 }
 
 void MyString::operator=(const char& str){
-  
-  this->operator=(&str);
-}
 
-void MyString::operator=(const char* str){
-
-  if(this->c_str == str)
-    return;
-  
-  if(str == nullptr){
-    
-    if(this->c_str != nullptr){
-      delete[] this->c_str;
-    }
-    this->c_str = nullptr;
-    
-    return;
-  }
-  
-  int size = 0;
-  for(; str[size] != '\0'; size++);
-
-  if(this->c_str != nullptr)
-    delete[] this->c_str;
-
-  this->c_str = new char[size];
-
-  int i = 0;
-  for(; i < size + 1; i++){
-    this->c_str[i] = str[i];
-  }
+  strcpy(this->c_str, str);
 }
 
 void MyString::operator=(MyString&& str){
@@ -121,39 +93,34 @@ void MyString::operator=(MyString&& str){
 }
 
 bool MyString::operator==(MyString& str){
-  return this->operator==(&str);  
-}
 
-bool MyString::operator==(MyString* str){
+  if(this == &str)
+    return true;
+ 
+  if(this->c_str == nullptr && str.c_str == nullptr)
+    return true;
+  else if(this->c_str == nullptr && str.c_str != nullptr)
+    return false;
+  else if(this->c_str != nullptr && str.c_str == nullptr)
+    return false;
 
-  if(this == str)
-    return true;
-  
-  if(this->c_str == nullptr && str->c_str == nullptr)
-    return true;
-  else if(this->c_str == nullptr && str->c_str != nullptr)
-    return false;
-  else if(this->c_str != nullptr && str->c_str == nullptr)
-    return false;
-  
   int size1 = 0;
   for(; this->c_str[size1] != '\0'; size1++);
-
+  
   int size2 = 0;
-  for(; str->c_str[size2] != '\0'; size2++);
-
+  for(; str.c_str[size2] != '\0'; size2++);
+  
   if(size1 != size2)
     return false;
   
   int i = 0;
-  for(; i < size1 + 1 && this->c_str[i] == str->c_str[i]; i++);
+  for(; i < size1 + 1 && this->c_str[i] == str.c_str[i]; i++);
   
   if(i - 1 == size1){
     return true;
   }
   else
     return false;
-  
   return true;
 }
 
@@ -186,7 +153,6 @@ bool MyString::operator==(char* c_str){
   
   else
     return false;
-
   return true; 
 }
 

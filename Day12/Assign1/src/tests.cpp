@@ -42,20 +42,32 @@ char* strcat(char* c_str1, char* c_str2){
 }
 
 //compares two c_strings for equality
-bool strcmp(char* c_str1, char* c_str2){
-
-  if(c_str1 == c_str2)
+bool strcmp(MyString* str, char* c_str2){
+  
+  if(str == nullptr && c_str2 == nullptr)
     return true;
   
-  if(c_str1 == nullptr && c_str2 == nullptr)
-    return true;
-  
-  else if(c_str1 == nullptr && c_str2 != nullptr)
+  else if(str == nullptr && c_str2 != nullptr)
     return false;
   
-  else if(c_str1 != nullptr && c_str2 == nullptr)
+  else if(str != nullptr && c_str2 == nullptr){
+    if(str->getString() == nullptr)
+      return true;
+    return false;
+  }
+
+  if(str == nullptr)
     return false;
 
+  if(str->getString() == nullptr && c_str2 == nullptr){
+    return true;
+  }
+  
+  if(str->getString() == c_str2)
+    return true;
+  
+  const char* c_str1 = str->getString();
+  
   int size1 = 0;
   for(; c_str1[size1] != '\0'; size1++);
 
@@ -76,77 +88,88 @@ if(size1 != size2)
   return true;  
 }
 
-TEST(strcat_Tests, nullptr_Tests){
-
-  char* tmp = nullptr;
-
-  if(strcmp(strcat(tmp, c_str), c_str))
-    SUCCEED();
-  else{
-    FAIL();
-    return;
-  }
-
-  if(strcmp(strcat(c_str, tmp), c_str))
-    SUCCEED();
-  else{
-    FAIL();
-    return;
-  }
-
-  if(strcmp(strcat(tmp, tmp), tmp))
-    SUCCEED();
-  else{
-    FAIL();
-  }
-}
-
-TEST(strcat_Tests, Input_Cstrings){
-  char tmp [13] = "HelloHello\0";
-  if(strcmp(strcat(c_str, c_str), tmp))
-    SUCCEED();
-  else{
-    FAIL();
-  }
-}
-
 TEST(strcmp_Tests, Input_Nullptr){
-  char* tmp = nullptr;
-
-  if(strcmp(tmp, c_str)){
+  
+  MyString* tmp = nullptr;
+  
+  if(strcmp(nullptr, c_str)){
     FAIL();
     return;
   }
-  else if(strcmp(c_str, tmp)){
+  else if(strcmp(&str, nullptr)){
     FAIL();
     return;
   }
-  else if(strcmp(c_str, c_str)){
+  else if(strcmp(tmp, nullptr)){
     SUCCEED();
   }
   else{
     FAIL();
-    return;
   }
 }
 
 TEST(strcmp_Tests, Cstrings_input){
-  char tmp[7] = "Hello\0";
-  char tmp2[7] = "Hello\0";
   
-  if(strcmp(tmp, tmp)){
+  if(strcmp(&str, c_str)){
     SUCCEED();
   }
   else{
     FAIL();
     return;
   }
+  
+  if(!strcmp(&str, c_str2))
+    SUCCEED();
+  else{
+    FAIL();
+    return;
+  }
+}
 
-  if(strcmp(tmp, tmp2))
+TEST(strcat_Tests, nullptr_Tests){
+
+  char* tmp = nullptr;
+  MyString* tmpstr = new MyString(strcat(tmp, c_str));
+  
+  if(strcmp(tmpstr, c_str))
     SUCCEED();
   else{
     FAIL();
+    delete tmpstr;
     return;
+  }
+  
+  delete tmpstr;
+  tmpstr = new MyString(strcat(c_str, tmp));
+  
+  if(strcmp(tmpstr, c_str))
+    SUCCEED();
+  else{
+    FAIL();
+    delete tmpstr;
+    return;
+  }
+  
+  delete tmpstr;
+  tmpstr = new MyString(strcat(tmp, tmp));
+
+  if(strcmp(tmpstr, tmp))
+    SUCCEED();
+  else{
+    delete tmpstr;
+    FAIL();
+  }
+  delete tmpstr;
+}
+
+TEST(strcat_Tests, Input_Cstrings){
+  char tmp [13] = "HelloHello\0";
+  MyString tmpstr(strcat(c_str, c_str));
+
+  if(strcmp(&tmpstr, tmp))
+    SUCCEED();
+  else{
+    FAIL();
   }
 }
 
@@ -214,18 +237,13 @@ TEST(Operator_Overload_Tests, Plus_Operator){
   strcat(tmpstr, c_str);
   strcat(tmpstr, c_str2);
 
-  if(strcmp(str + str2, tmpstr) == 0){
+  if(strcmp(&(str + str2), tmpstr) == 0){
     SUCCEED();
   }
   else{
     FAIL();
     return;
   }
-  
-  if(strcmp(str + &str2, tmpstr) == 0)
-    SUCCEED();
-  else
-    FAIL();
 }
 
 TEST(Operator_Overload_Tests, Multiplication_Operator){
@@ -234,7 +252,7 @@ TEST(Operator_Overload_Tests, Multiplication_Operator){
   strcat(tmp, c_str);
   strcat(tmp, c_str);
   
-  if(strcmp(str * 2, tmp) == 0)
+  if(strcmp(&(str * 2), tmp) == 0)
     SUCCEED();
   else{
     FAIL();
@@ -286,8 +304,9 @@ TEST(Operator_Overload_Tests, Assignment_Move_Operator){
 TEST(Operator_Overload_Tests, EqualTo_Operator){
   MyString tmp(c_str);
   MyString tmp2(c_str2);
-
-  if(str == tmp){
+  MyString tmp3(c_str);
+  
+  if(tmp3 == tmp){
     SUCCEED();
   }
   else{
@@ -295,7 +314,7 @@ TEST(Operator_Overload_Tests, EqualTo_Operator){
     return;
   }
   
-  if(str == tmp2){
+  if(tmp == tmp2){
     FAIL();
     return;
   }

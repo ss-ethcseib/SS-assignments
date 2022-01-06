@@ -1,7 +1,6 @@
 #include <gtest/gtest.h>
 #include "Sentence.h"
 #include <string>
-#include <iostream>
 
 char str[12] = "Hello World";
 Sentence sent(str);
@@ -10,6 +9,13 @@ TEST(Constructor_Tests, Null_For_Char_Constructor){
   char* sent = nullptr;
   Sentence sentence(sent);
   ASSERT_EQ(nullptr, sentence.getSentence());
+}
+
+TEST(Constructor_Tests, Leading_And_Trailing_White_Space){
+  char tmp[25] = "   Hello   World   ";
+  Sentence sentence(tmp);
+
+  ASSERT_EQ(0, strcmp(tmp, sentence.getSentence()));
 }
 
 TEST(Constructor_Tests, Null_For_Sentence_Constructor){
@@ -35,9 +41,16 @@ TEST(Get_Tests, Get_Null_Sentence){
   ASSERT_EQ(nullptr, sentence.getSentence());
 }
 
-TEST(Get_Tests, Get_Filled_Sentence){
+TEST(Get_Tests, Get_Sentence){
 
   ASSERT_EQ(0, strcmp(str, sent.getSentence()));
+}
+
+TEST(Get_Tests, Get_Number_Of_Words_Despite_White_Space){
+  char tmp[] = "   Hello    World   ";
+  Sentence sentence(tmp);
+
+  ASSERT_EQ(2, sentence.num_words());
 }
 
 TEST(Get_Tests, Get_Number_Of_Words){

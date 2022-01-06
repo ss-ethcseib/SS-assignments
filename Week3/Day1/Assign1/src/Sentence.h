@@ -2,7 +2,7 @@
 
 #include <vector>
 #include <string.h>
-#include <iostream>
+#include <string>
 
 class Sentence{
 
@@ -31,7 +31,8 @@ class Sentence{
 
     if(sent != nullptr){
       bool swap = true;
-      for(int i = 0; sent[i] != '\0'; i++){
+      int i = 0;
+      for(; sent[i] != '\0'; i++){
 
 	if(sent[i] != ' ' && swap){
 	  offsets.push_back(i);
@@ -41,7 +42,7 @@ class Sentence{
 	  swap = true;
 	}
       }
-      sentence = new char[1];
+      sentence = new char[i];
       strcpy(sentence, sent);
     }
     else
@@ -50,7 +51,12 @@ class Sentence{
   
   Sentence(Sentence* sent){
     if(sent != nullptr){
-      this->sentence = new char[1];
+
+      int i = 0;
+      char* tmp = sent->getSentence();
+      for(; tmp[i] != '\0'; i++);
+
+      this->sentence = new char[i];
       strcpy(this->sentence, sent->sentence);
       this->offsets = sent->offsets;
     }
@@ -67,8 +73,19 @@ class Sentence{
   
   void operator= (Sentence& sent)
   {
-    if(this->sentence == nullptr)
-      this->sentence = new char[1];
+    char* tmp = sent.getSentence();
+
+    int i = 0;
+    for(; tmp[i] != '\0'; i++);
+    
+    if(this->sentence == nullptr){  
+
+      this->sentence = new char[i];
+    }
+    else{
+      delete[] this->sentence;
+      this->sentence = new char[i];
+    }
     strcpy(this->sentence, sent.sentence);
     this->offsets = sent.offsets;
   }

@@ -22,12 +22,23 @@ std::string Sentence::get_word(const int index){
 
 void Sentence::replace(char* sent){
   if(sent == nullptr){
-    sentence = nullptr;
+    if(sentence != nullptr){
+      delete[] sentence;
+      sentence = nullptr;
+    }
     return;
   }
+  int i = 0;
+  for(; sent[i] != '\0'; i++); 
+
+  if(sentence == nullptr){
+    sentence = new char[i];
+  }
+  else{
+    delete[] sentence;
+    sentence = new char[i];
+  }
   
-  if(sentence == nullptr)
-    sentence = new char[1];
   strcpy(sentence, sent);
 }
 
