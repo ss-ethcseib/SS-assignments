@@ -8,3 +8,5 @@
 #include "Square.h"
 #include "Ellipse.h"
 #include "Circle.h"
+#include "Line.h"
+#include "Multi_Line.h"

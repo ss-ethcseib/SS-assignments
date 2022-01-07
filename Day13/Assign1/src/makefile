@@ -11,4 +11,4 @@ tests.o: tests.cpp
 	clang++ $(cflags) tests.cpp
 
 clean:
-	rm -r *.o $(target)
+	rm -r *.o *.*~ *~ $(target)
