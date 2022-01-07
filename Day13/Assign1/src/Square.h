@@ -4,18 +4,18 @@
 
 class Square: public Rhombus{
 private:
-  float l, w;
+  float l;
 
 public:
-  Square(): l(0), w(0){}
-  Square(float l, float w): l(l), w(w){}
+  Square(): l(0){}
+  Square(float l): l(l){}
 
     float Area(){
-    return l * w;
+    return l * l;
   }
 
   float Perimeter(){
-    return 2 * l + 2 * w;
+    return 4 * l;
   }
 
 };

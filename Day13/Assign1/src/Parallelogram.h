@@ -9,6 +9,9 @@ private:
   
 public:
 
+  Parallelogram(): b(0), h(0){}
+  Parallelogram(float b, float h): b(b), h(h){}
+  
   float Area(){
     return b * h;
   }

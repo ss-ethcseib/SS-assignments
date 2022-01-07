@@ -8,6 +8,7 @@ class Line{
 private:
   Point* a;
   Point* b;
+  float distance;
   
 public:
   ~Line(){
@@ -18,17 +19,21 @@ public:
       delete b;
   }
   
-  Line(): a(new Point(0.0f, 0.0f)), b(new Point(0.0f, 0.0f)) {}
-  Line(Point* a, Point* b): a(a), b(b){}
+  Line(): a(new Point(0.0f, 0.0f)), b(new Point(0.0f, 0.0f)), distance(0) {}
+  
+  Line(Point* a, Point* b): a(a), b(b){
+    distance = sqrt(pow(a->getX() - b->getX(), 2) + pow(a->getY() - b-\
+>getY(), 2));
+  }
 
   const float Distance(){
     
-    return sqrt(pow(a->getX() + b->getX(), 2) - pow(a->getY() + b->getY(), 2));
+    return distance;
   }
 
-  bool operator==(Line& line){
-    if(this->a->getX() == line.a->getX() &&
-       this->b->getY() == line.b->getY())
+  bool operator==(const Line& line){
+    if(this->a->getX() == line.a->getX() && this->a->getY() == line.a->getY()
+       && this->b->getX() == line.b->getX() && this->b->getY() == line.b->getY())
       return true;
     return false;
   }

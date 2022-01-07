@@ -5,18 +5,18 @@
 class Trapezoid: public Quadrilateral{
 
 private:
-  float side1, side2, side3, side4, h;
+  float base1, base2, side1, side2, h;
 
 public:
-  Trapezoid(): side1(0), side2(0), side3(0), side4(0), h(0){}
-  Trapezoid(float a, float b, float h): side1(a), side2(b), side3(0), side4(0), h(h){}
+  Trapezoid(): base1(0), base2(0), side1(0), side2(0), h(0){}
+  Trapezoid(float base1, float base2, float side1, float side2, float h): base1(base1), base2(base2), side1(side1), side2(side2), h(h){}
 
   float Area(){
-      return 0.5 * (side1 + side2) * h;
+      return 0.5 * (base1 + base2) * h;
   }
 
   float Perimeter(){
-    return side1 + side2 + side3 + side4;
+    return base1 + base2 + side1 + side2;
   }
 
 };

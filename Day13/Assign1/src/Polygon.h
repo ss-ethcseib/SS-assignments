@@ -5,6 +5,17 @@
 class Polygon: public TwoDShape{
 
 public:
+  ~Polygon(){}
+  Polygon(){}
+
+  float Area(){
+    return 0;
+  }
+
+  float Perimeter(){
+    return 0;
+  }
+  
   float Circumference(){
     return -1.0;
   }

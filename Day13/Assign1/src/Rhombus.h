@@ -6,16 +6,20 @@
 class Rhombus: public Parallelogram{
 
 private:
-  float l;
-  float w;
+  float d1;
+  float d2;
+  float side;
  
 public:
+
+  Rhombus(): d1(0), d2(0), side(0){}
+  Rhombus(float d1, float d2, float side): d1(d1), d2(d2), side(side){}
   
   float Area(){
-    return l * w;
+    return 0.5f * d1 * d2;
   }
 
   float Perimeter(){
-    return 2 * l + 2 * w;
+    return 4 * side;
   }
 };
