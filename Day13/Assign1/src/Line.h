@@ -37,4 +37,8 @@ public:
       return true;
     return false;
   }
+  void Moved(){
+    a = nullptr;
+    b = nullptr;
+  }
 };                           

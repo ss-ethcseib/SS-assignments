@@ -3,27 +3,22 @@
 #include "Ellipse.h"
 
 class Circle: public Ellipse{
-
-private:
-  float r;
   
 public:
-  Circle(): r(0){}
-  Circle(float r): r(r){}
-
-  float Area(){
-    return 3.14159 * r * r;
+  Circle(): Ellipse(){}
+  Circle(float r){
+    area = 3.14159 * r * r;
+    circumference = 2 * 3.14159 * r;
+    diameter = 2 * r;
   }
 
-  float Circumference(){
-    return Perimeter();
-  }
+  Circle(Ellipse&& e){
+    area = e.Area();
+    circumference = e.Circumference();
+    diameter = e.Diameter();
 
-  float Perimeter(){
-    return 2 * 3.14159 * r;
-  }
-
-  float Diameter(){
-    return r * 2;
+    e.setArea(0);
+    e.setCircumference(0);
+    e.setDiameter(0);
   }
 };

@@ -4,22 +4,20 @@
 
 
 class Rhombus: public Parallelogram{
-
-private:
-  float d1;
-  float d2;
-  float side;
  
 public:
 
-  Rhombus(): d1(0), d2(0), side(0){}
-  Rhombus(float d1, float d2, float side): d1(d1), d2(d2), side(side){}
-  
-  float Area(){
-    return 0.5f * d1 * d2;
+  Rhombus(): Parallelogram(){}
+  Rhombus(float d1, float d2, float side){
+    area = 0.5f * d1 * d2;
+    perimeter = 4 * side;
   }
 
-  float Perimeter(){
-    return 4 * side;
+  Rhombus(Parallelogram&& par){
+    area = par.Area();
+    perimeter = par.Perimeter();
+
+    par.setArea(0);
+    par.setPerimeter(0);
   }
 };

@@ -4,31 +4,57 @@
 #include <math.h>
 
 class Ellipse: public TwoDShape{
-private:
-  
-  //a is the radius of the y-axis and b is the radius of the x-axis.
-  float a;
-  float b;
+
+protected:
+  float area, circumference, diameter;
   
 public:
 
-  Ellipse(): a(0.0f), b(0.0f){}
-  Ellipse(float a, float b): a(a), b(b){}
-  
-  float Area(){
-    return 3.14159 * a * b;
+  Ellipse(){}
+  Ellipse(const float a, const float b){
+    area = 3.14159 * a * b;
+    circumference = 3.14159 * (3 * (a + b) - sqrt((3 * a + b) * (a + 3 * b)));
+    diameter = 2 * a;
   }
 
-  float Circumference(){
-    return 3.14159 * (3 * (a + b) - sqrt((3 * a + b) * (a + 3 * b)));
-  }
+  Ellipse(Ellipse&& e){
+    area = e.Area();
+    circumference = e.Circumference();
+    diameter = e.Diameter();
 
-  float Perimeter(){
-    return 3.14159 * (3 * (a + b) - sqrt((3 * a + b) * (a + 3 * b)));
-  }
-
-  float Diameter(){
-    return 2 * a;
+    e.setArea(0);
+    e.setDiameter(0);
+    e.setCircumference(0);
   }
   
+  const float Area() override{
+    return area;
+  }
+
+  const float Circumference() override {
+    return circumference;
+  }
+
+  const float Perimeter() override {
+    return -1;
+  }
+
+  const float Diameter() override {
+    return diameter;
+  }
+
+  void setArea(const int ar){
+    if(ar > -1)
+      area = ar;
+  }
+
+  void setCircumference(const int c){
+    if(c > -1)
+      circumference = c;
+  }
+
+  void setDiameter(const int d){
+    if(d > -1)
+      diameter = d;
+  }
 };

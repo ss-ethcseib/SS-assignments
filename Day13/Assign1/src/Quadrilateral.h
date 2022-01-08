@@ -5,19 +5,20 @@
 
 class Quadrilateral: public Polygon{
 
-private:
-  float perimeter;
-  float area;
-  
 public:
 
   ~Quadrilateral(){}
 
-  Quadrilateral(){
-    perimeter = 0;
-    area = 0;
-  }
+  Quadrilateral(): Polygon(){}
 
+  Quadrilateral(Polygon&& q){
+    perimeter = q.Perimeter();
+    area = q.Area();
+
+    q.setPerimeter(0);
+    q.setArea(0);
+  }
+  
   Quadrilateral(Triangle** trs){
 
     perimeter = 0;
@@ -47,14 +48,5 @@ public:
 	i++;
       }
     }
-  }
-  
-  float Area(){
-    
-    return area;
-  }
-
-  float Perimeter(){
-    return perimeter;
   }
 };

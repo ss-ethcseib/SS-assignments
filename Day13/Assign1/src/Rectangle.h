@@ -3,20 +3,19 @@
 #include "Parallelogram.h"
 
 class Rectangle: public Parallelogram{
-private:
-  float l;
-  float w;
 
 public:
-  Rectangle(): l(0), w(0){}
-  Rectangle(float l, float w): l(l), w(w){}
-
-    float Area(){
-    return l * w;
+  Rectangle(): Parallelogram(){}
+  Rectangle(float l, float w){
+    area = l * w;
+    perimeter = 2 * l + 2 * w;
   }
 
-  float Perimeter(){
-    return 2 * l + 2 * w;
-  }
+  Rectangle(Parallelogram&& par){
+    area = par.Area();
+    perimeter = par.Perimeter();
 
+    par.setArea(0);
+    par.setPerimeter(0);
+  }
 };

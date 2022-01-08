@@ -3,19 +3,19 @@
 #include "Rhombus.h"
 
 class Square: public Rhombus{
-private:
-  float l;
 
 public:
-  Square(): l(0){}
-  Square(float l): l(l){}
-
-    float Area(){
-    return l * l;
+  Square(): Rhombus(){}
+  Square(float l){
+    area = l * l;
+    perimeter = 4 * l;
   }
+  
+  Square(Rhombus&& rh){
+    area = rh.Area();
+    perimeter = rh.Perimeter();
 
-  float Perimeter(){
-    return 4 * l;
+    rh.setArea(0);
+    rh.setPerimeter(0);
   }
-
 };

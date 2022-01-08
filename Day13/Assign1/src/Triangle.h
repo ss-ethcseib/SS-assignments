@@ -10,7 +10,6 @@ class Triangle: public Polygon{
 
 private:
 
-  float h;
   Multi_Line lines;
   
 public:
@@ -18,33 +17,42 @@ public:
     
   }
   
-  Triangle(): Polygon(), h(0){
+  Triangle(): Polygon(){
     lines(new Line(new Point(0.0f, 0.0f), new Point(0.5f, 1.0f)));
     lines(new Line(new Point(0.5f, 1.0f), new Point(1.0f, 0.0f)));
     lines(new Line(new Point(1.0f, 0.0f), new Point(0.0f, 0.0f)));
     lines(nullptr);
   }
   
-  Triangle(Point* a, Point* b, Point* c, const float h): Polygon(), h(h){
+  Triangle(Point* a, Point* b, Point* c, const float h){
 
     lines(new Line(a, b));
     lines(new Line(b, c));
     lines(new Line(c, a));
     lines(nullptr);
 
+    this->area = 0.5 * lines[2]->Distance() * h;
+    this->perimeter = lines[0]->Distance() + lines[1]->Distance() + lines[2]->Distance();
+
+  }
+
+  Triangle(Triangle&& tr){
+    lines(&tr[0]);
+    lines(&tr[1]);
+    lines(&tr[2]);
+
+    tr[0].Moved();
+    tr[1].Moved();
+    tr[2].Moved();
+
+    tr.area = 0;
+    tr.perimeter = 0;
   }
   
-  float Area(){
-    return 0.5 * lines[2]->Distance() * h;
-  }
-
-  float Perimeter(){
-    return lines[0]->Distance() + lines[1]->Distance() + lines[2]->Distance();
-  }
-
   Line& operator[](int index){
     return *(lines[index]);
   }
+  
   
   Line& compareTrianglePoints(Triangle& tr){
 
