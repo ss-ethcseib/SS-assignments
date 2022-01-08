@@ -118,6 +118,13 @@ TEST(Quadrilateral_Tests, Area_Test){
   }
 }
 
+//This is interesting because I started to implement a
+//system where you create shapes by creating triangles
+//and combining them. Every shape, excluding ellipses
+//and their subset, can be done this way. I didn't fully
+//implement this because it would take days. I only
+//implemented this for the quadrilateral class and
+//even then it's incredibly simple and not dynamic.
 TEST(Quadrilateral_Tests, Perimeter_Test){
 
   Triangle** tr = new Triangle*[3];
@@ -317,6 +324,25 @@ TEST(Circle_Tests, Diameter_Test){
   shape = &c;
 
   ASSERT_EQ(r * 2, shape->Diameter());
+}
+
+TEST(Shape_Construction_Tests, Circle_To_Ellipse){
+  float r = 3.f;
+  
+  Circle c(r);
+  Ellipse* el = &c;
+  Ellipse e(el);
+
+  ASSERT_EQ(true, e == *el);
+}
+
+TEST(Shape_Constructions_Tests, Rhombus_To_Parallelogram){
+  Rhombus rh(2.0f, 2.f, 3.f);
+  Parallelogram* pn = &rh;
+  
+  Parallelogram p(*pn);
+  
+  ASSERT_EQ(true, p == *pn);
 }
 
 int main(int argc, char **argv){

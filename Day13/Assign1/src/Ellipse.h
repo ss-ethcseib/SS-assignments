@@ -18,13 +18,54 @@ public:
   }
 
   Ellipse(Ellipse&& e){
-    area = e.Area();
-    circumference = e.Circumference();
-    diameter = e.Diameter();
+    area = e.area;
+    circumference = e.circumference;
+    diameter = e.diameter;
 
-    e.setArea(0);
-    e.setDiameter(0);
-    e.setCircumference(0);
+    e.area = 0;
+    e.diameter = 0;
+    e.circumference = 0;
+  }
+
+  Ellipse(Ellipse* e){
+    area = e->area;
+    circumference = e->circumference;
+    diameter = e->diameter;
+  }
+
+  Ellipse& operator=(Ellipse&& e){
+
+    if(this == &e)
+      return *this;
+    
+    this->area = e.area;
+    this->diameter = e.diameter;
+    this->circumference = e.circumference;
+
+    e.area = 0;
+    e.diameter = 0;
+    e.circumference = 0;
+
+    return *this;
+  }
+
+  Ellipse& operator=(Ellipse& e){
+
+    if(this == &e)
+      return *this;
+    
+    this->diameter = e.diameter;
+    this->circumference = e.circumference;
+    this->area = e.area;
+
+    return *this;
+  }
+
+  bool operator==(Ellipse& e){
+    if(area == e.area && circumference == e.circumference && diameter == e.diameter)
+      return true;
+    
+    return false;
   }
   
   const float Area() override{

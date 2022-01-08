@@ -6,39 +6,63 @@
 class Line{
 
 private:
-  Point* a;
-  Point* b;
+  Point a;
+  Point b;
   float distance;
   
 public:
   ~Line(){
-    if(a != nullptr)
-      delete a;
 
-    if(b != nullptr)
-      delete b;
   }
   
-  Line(): a(new Point(0.0f, 0.0f)), b(new Point(0.0f, 0.0f)), distance(0) {}
+  Line(): a(Point(0.0f, 0.0f)), b(Point(0.0f, 0.0f)), distance(0) {}
   
-  Line(Point* a, Point* b): a(a), b(b){
-    distance = sqrt(pow(a->getX() - b->getX(), 2) + pow(a->getY() - b-\
->getY(), 2));
+  Line(Point* a, Point* b): a(*a), b(*b){
+    
+    distance = sqrt(pow(a->getX() - b->getX(), 2) + pow(a->getY() - b->getY(), 2));
   }
 
+  Line(Line& line){
+    a = line.a;
+    b = line.b;
+    distance = line.distance;
+  }
+
+  Line(Line&& line){
+    
+    a = std::move(line.a);
+    b = std::move(line.b);
+    distance = line.distance;
+
+    line.distance = 0;
+  }
+  
   const float Distance(){
     
     return distance;
   }
 
-  bool operator==(const Line& line){
-    if(this->a->getX() == line.a->getX() && this->a->getY() == line.a->getY()
-       && this->b->getX() == line.b->getX() && this->b->getY() == line.b->getY())
-      return true;
-    return false;
+  Line& operator=(Line&& l){
+    this->a = std::move(l.a);
+    this->b = std::move(l.b);
+    this->distance = l.distance;
+
+    l.distance = 0;
+    
+    return *this;
   }
-  void Moved(){
-    a = nullptr;
-    b = nullptr;
+
+  Line& operator=(Line& l){
+    this->a = l.a;
+    this->b = l.b;
+    this->distance = l.distance;
+
+    return *this;
+  }
+  
+  bool operator==(Line& line){
+    if(this->a == line.a && this->b == line.b)
+       return true;
+    return false;
   }
 };                           

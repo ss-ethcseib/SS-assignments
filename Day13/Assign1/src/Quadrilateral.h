@@ -11,14 +11,27 @@ public:
 
   Quadrilateral(): Polygon(){}
 
-  Quadrilateral(Polygon&& q){
-    perimeter = q.Perimeter();
-    area = q.Area();
+  Quadrilateral(Quadrilateral&& q){
+    perimeter = q.perimeter;
+    area = q.area;
 
-    q.setPerimeter(0);
-    q.setArea(0);
+    q.perimeter = 0;
+    q.area = 0;
   }
-  
+
+  Quadrilateral(Quadrilateral& q){
+    perimeter = q.perimeter;
+    area = q.area;
+  }
+
+//This is interesting because I started to implement a  
+//system where you create shapes by creating triangles
+//and combining them. Every shape, excluding ellipses
+//and their subset, can be done this way. I didn't fully
+//implement this because it would take days. I only
+//implemented this for this class because it seemed easier.
+//This version is incredibly simple and not dynamic though.
+//This is used alot in graphics rendering software.
   Quadrilateral(Triangle** trs){
 
     perimeter = 0;
@@ -48,5 +61,37 @@ public:
 	i++;
       }
     }
+  }
+
+  bool operator==(Quadrilateral& q){
+
+    if(this->area == q.area && this->perimeter == q.perimeter)
+      return true;
+    return false;
+  }
+  
+  Quadrilateral& operator=(Quadrilateral&& q){
+
+    if(this == &q)
+      return *this;
+    
+    this->area = q.area;
+    this->perimeter = q.perimeter;
+
+    q.perimeter = 0;
+    q.area = 0;
+
+    return *this;
+  }
+
+  Quadrilateral& operator=(Quadrilateral& q){
+
+    if(this == &q)
+      return *this;
+    
+    this->area = q.area;
+    this->perimeter = q.perimeter;
+
+    return *this;
   }
 };

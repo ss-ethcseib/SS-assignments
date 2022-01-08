@@ -12,11 +12,44 @@ public:
     perimeter = 2 * b + 2 * h;
   }
 
-  Parallelogram(Quadrilateral&& quad){
-    area = quad.Area();
-    perimeter = quad.Perimeter();
+  Parallelogram(Parallelogram&& par){
+    area = par.area;
+    perimeter = par.perimeter;
 
-    quad.setArea(0);
-    quad.setPerimeter(0);
+    par.perimeter = 0;
+    par.area = 0;
+  }
+
+  Parallelogram(Parallelogram& par){
+    area = par.area;
+    perimeter = par.perimeter;
+  }
+
+  Parallelogram& operator=(Parallelogram&& par){
+
+    if(this == &par)
+      return *this;
+    
+    this->area = par.area;
+    this->perimeter = par.perimeter;
+
+    return *this;
+  }
+
+  Parallelogram& operator=(Parallelogram& par){
+
+    if(this == &par)
+      return *this;
+    
+    this->area = par.area;
+    this->perimeter = par.perimeter;
+
+    return *this;
+  }
+
+  bool operator==(Parallelogram& par){
+    if(this->area == par.area && this->perimeter == par.perimeter)
+      return true;
+    return false;
   }
 };

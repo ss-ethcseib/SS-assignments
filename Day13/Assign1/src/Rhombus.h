@@ -13,11 +13,47 @@ public:
     perimeter = 4 * side;
   }
 
-  Rhombus(Parallelogram&& par){
-    area = par.Area();
-    perimeter = par.Perimeter();
+  Rhombus(Rhombus&& rh){
+    area = rh.area;
+    perimeter = rh.perimeter;
 
-    par.setArea(0);
-    par.setPerimeter(0);
+    rh.area = 0;
+    rh.perimeter = 0;
+  }
+
+  Rhombus(Rhombus& rh){
+    area = rh.area;
+    perimeter = rh.perimeter;
+  }
+
+  Rhombus& operator=(Rhombus&& rh){
+
+    if(this == &rh)
+      return *this;
+    
+    this->area = rh.area;
+    this->perimeter = rh.perimeter;
+
+    rh.area = 0;
+    rh.perimeter = 0;
+
+    return *this;
+  }
+
+  Rhombus& operator=(Rhombus& rh){
+
+    if(this == &rh)
+      return *this;
+    
+    this->area = rh.area;
+    this->perimeter = rh.perimeter;
+    
+    return *this;
+  }
+
+  bool operator==(Rhombus& rh){
+    if(this->area == rh.area && this->perimeter == rh.perimeter)
+      return true;
+    return false;
   }
 };
