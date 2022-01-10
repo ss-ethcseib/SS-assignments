@@ -5,8 +5,9 @@
 class MyString{
  private:
   char* c_str;
-  void strcpy(char*&, const char&);
-  void strcpy(char*&, const char*);
+  
+  void strcpy(const char&);
+  void strcpy(const char*);
   
  public:
   ~MyString(){
@@ -37,7 +38,7 @@ class MyString{
 
   MyString(MyString& str){
     c_str = nullptr;
-    strcpy(c_str, str.c_str);
+    strcpy(str.c_str);
   }
   
   MyString(MyString* str){
@@ -45,7 +46,7 @@ class MyString{
     c_str = nullptr;
 
     if(str != nullptr)
-      strcpy(c_str, str->c_str);
+      strcpy(str->c_str);
   }
   
   MyString(MyString&& str) noexcept{

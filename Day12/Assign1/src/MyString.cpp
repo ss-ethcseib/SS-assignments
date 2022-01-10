@@ -1,10 +1,10 @@
 #include "MyString.h"
 
-void MyString::strcpy(char*& dest, const char& src){
-  strcpy(dest, &src);
+void MyString::strcpy(const char& src){
+  strcpy(&src);
 }
 
-void MyString::strcpy(char*& dest, const char* src){
+void MyString::strcpy(const char* src){
 
   if(src == nullptr)
     return;
@@ -12,15 +12,15 @@ void MyString::strcpy(char*& dest, const char* src){
   int i = 0;
   for(; src[i] != '\0'; i++);
 
-  if(dest != nullptr)
-    delete[] dest;
+  if(c_str != nullptr)
+    delete[] c_str;
 
-  dest = new char[i];
+  c_str = new char[i];
 
   for(i = 0; src[i] != '\0'; i++){
-    dest[i] = src[i];
+    c_str[i] = src[i];
   }
-  dest[i] = src[i];
+  c_str[i] = src[i];
 }
 
 MyString& MyString::operator+(MyString& str){
@@ -76,7 +76,7 @@ char MyString::operator[](int index){
 
 void MyString::operator=(const char& str){
 
-  strcpy(this->c_str, str);
+  strcpy(str);
 }
 
 void MyString::operator=(MyString&& str){
