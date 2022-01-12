@@ -1,14 +1,39 @@
 #include <gtest/gtest.h>
-#include<sstream>
+#include <sstream>
+#include "utilities.h"
 
-TEST(Conversion_Tests, Hex_Conversions){
-  std::stringstream str;
-  str << std::hex << "0xf";
+TEST(StringToLower_Tests, string_entered){
+  std::string str = "ASF";
 
-  int val = 0;
-  str >> val;
+  StringToLower(str);
+
+  ASSERT_EQ("asf", str);
+}
+
+TEST(is_Hex_Tests, hex_value_entered){
+
+  std::string str = "0xf";
   
-  ASSERT_EQ(15, val);
+  ASSERT_EQ(true, is_Hex(&str));
+}
+
+TEST(is_Hex_Tests, non_Hex_value_entered){
+  std::string str = "f";
+
+  ASSERT_EQ(false, is_Hex(&str));
+}
+
+TEST(is_dec_Tests, decimal_value_entered){
+
+  std::string str = "123";
+
+  ASSERT_EQ(true, is_dec(&str));
+}
+
+TEST(is_dec_Tests, non_decimal_value_entered){
+  std::string str = "kl";
+
+  ASSERT_EQ(false, is_dec(&str));
 }
 
 int main(int argc, char** argv){

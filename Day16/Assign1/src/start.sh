@@ -4,7 +4,7 @@ clear
 
 make > /dev/null
 
-#./tests
+./tests
 
 echo
 echo

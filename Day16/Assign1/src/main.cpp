@@ -1,16 +1,15 @@
 #include <iostream>
-#include <string>
 #include <sstream>
 #include <bitset>
-
-void StringToLower(std::string&);
+#include <iomanip>
+#include "utilities.h"
 
 int main(){
   std::stringstream str;
   std::string input = "";
   
   while(true){
-    std::cout << "Prompt > ";
+    std::cout << std::right << std::setw(20) << "Prompt > ";
     std::getline(std::cin >> std::ws, input);
     
     
@@ -28,20 +27,49 @@ int main(){
     str >> data[0];
 
     if(data[0] == "hex"){
-      int val = -1;
-      str >> val;
-      if(val != -1)
-	std::cout << "Prompt > " << val << std::endl;
+      
+      str >> data[1];
+      
+      if(is_dec(&data[1])){
+
+	str.seekg(0, std::ios::beg);
+	str.clear();
+	
+	int val = -1;
+
+        std::string tmp = "";
+	
+	str >> tmp;
+	str >> std::dec >> val;
+	std::cout << std::right << std::setw(22) << "Prompt > 0x" << std::hex << val << std::endl;
+      }
+      else{
+	std::cerr << "\nInvalid Number\n";
+      }
     }
     else if(data[0] == "bin"){
-      
-      int val = -1;
-      str >> val;
 
-      std::bitset<32> bin(val);
-      if(val != -1){
-	std::cout << "Prompt > " << bin << std::endl;
+      str >> data[1];
+      bool dec = is_dec(&data[1]);
+
+      if(is_Hex(&data[1]) || dec){
+        str.clear();
+	
+	int val = -1;
+
+	str.seekg(3, std::ios::beg);
+	
+	if(dec)
+	  str >> std::dec >> val;
+	else
+	  str >> std::hex >> val;
+
+	std::bitset<32> bin(val);
+	
+	std::cout << std::right << std::setw(20) << "Prompt > " << bin << std::endl;
       }
+      else
+	std::cerr << "\nInvalid Number\n";
     }
     else{
 
@@ -49,42 +77,66 @@ int main(){
       
       if(data[1] == "+"){
 
-	str.clear();
-	str.seekg(0, std::ios::beg);
+	str >> data[1];
 
-	int val1 = -1;
-	int val2 = -1;
+	bool dec1 = is_dec(&data[0]);
+	bool dec2 = is_dec(&data[1]);
+	
+	if((is_Hex(&data[0]) || dec1) &&
+	   (is_Hex(&data[1]) || dec2)){
 
-	str >> val1;
-	str >> data[0];
-	str >> val2;
+	  str.clear();
+	  str.seekg(0, std::ios::beg);
+	  
+	  
+	  int val1 = -1;
+	  int val2 = -1;
+	  
+	  if(!dec1)
+	    str >> std::hex >> val1;  
+	  else
+	    str >> std::dec >> val1;
+	  
+	  str >> data[0];
 
-	if(val1 != -1 && val2 != -1)
-	  std::cout << "Prompt > " << val1 + val2 << std::endl;
+	  if(!dec2)
+	    str >> std::hex >> val2;
+	  else
+	    str >> std::dec >> val2;
+	  
+	  std::cout << std::right << std::setw(20) << "Prompt > " << std::dec << val1 + val2 << std::endl;
+	}
+	else
+	  std::cerr << "\nInvalid Number\n";
       }
       else{
-	str.clear();
-	str.seekg(0, std::ios::beg);
 
-	int val = -1;
+	bool dec = is_dec(&data[0]);
 	
-	str >> val;
+	if(is_Hex(&data[0]) || dec){
 
-	if(val != -1)
-	  std::cout << "Prompt > " << val << std::endl;
+	  str.clear();
+	  str.seekg(0, std::ios::beg);
+	  
+	  
+	  int val = -1;
+	  std::string t = "";
+	  
+	  
+	  if(!dec){
+	    str >> std::hex >> val;
+	  }
+	  else
+	    str >> std::dec >> val;
+
+	  std::cout << std::right << std::setw(20) << "Prompt > " << std::dec << val << std::endl;
+	}
+	else
+	  std::cerr << "\nInvalid Number\n";
       }
-    }
-
+    }  
     str.str(std::string());
     str.clear();
-  }
-  
-  return 0;
-}
-
-void StringToLower(std::string& str){
-  
-  for(std::string::iterator it = str.begin(); it != str.end(); it++)
-   *it = tolower(*it);
-  
+  }  
+  return 0;  
 }

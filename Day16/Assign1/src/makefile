@@ -16,6 +16,9 @@ $(target2): $(objs2)
 main.o: main.cpp
 	clang++ $(cflags) main.cpp
 
+utilities.o: utilities.cpp
+	clang++ $(cflags) utilities.cpp
+
 tests.o: tests.cpp
 	clang++ $(cflags) tests.cpp
 
