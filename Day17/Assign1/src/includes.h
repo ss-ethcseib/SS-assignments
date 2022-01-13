@@ -1,0 +1,7 @@
+#include "Currency.h"
+#include "Dollar.h"
+#include "Euro.h"
+#include "Pound.h"
+#include "Yen.h"
+#include "Account.h"
+#include "Conversion.h"
