@@ -24,6 +24,13 @@ TEST(myvector_Function_Tests, Push_Back_Test){
     FAIL();
 }
 
+TEST(myvector_Function_Tests, Move_Push_back_Test){
+  myvector<int> vec;
+  
+  vec.push_back(1);
+  ASSERT_EQ(vec[0], 1);
+}
+
 TEST(myvector_Function_Tests, at_Function_Test){
   myvector<int> vec;
   fillVec(vec);
@@ -105,6 +112,17 @@ TEST(myvector_Operator_Overload_Tests, Equal_To_Operator_Test){
     FAIL();
 }
 
+TEST(myvector_Operator_Overload_Tests, Move_Assignment_Operator_Test){
+  myvector<int> vec1;
+  fillVec(vec1);
+  myvector<int> vec2;
+
+  vec2 = std::move(vec1);
+
+  ASSERT_EQ(vec2[1], 1);
+  ASSERT_EQ(vec1.size(), 0);
+}
+
 TEST(Iterator_Tests, Loop_Through_myvector_Obj){
   myvector<int> vec;
   fillVec(vec);
@@ -118,6 +136,15 @@ TEST(Iterator_Tests, Loop_Through_myvector_Obj){
     i++;
   }
   SUCCEED();
+}
+
+TEST(myvector_Constructor_Tests, Move_Constructor){
+  myvector<int> vec;
+  fillVec(vec);
+  myvector<int> vec2(std::move(vec));
+
+  ASSERT_EQ(vec2[0], 0);
+  ASSERT_EQ(vec.size(), 0);
 }
 
 int main(int argc, char** argv){

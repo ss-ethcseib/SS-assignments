@@ -9,7 +9,7 @@ private:
   T mUndefined;// Lots of STL functions say that doing something naughty gets "undefined behavior".
 
 public:
-  myvector() noexcept(false): mData(new T[16]), mSize(0), mCapacity(16) {}
+  myvector() noexcept(true): mData(new T[16]), mSize(0), mCapacity(16) {}
   myvector(const T* data, const int sz) noexcept(true): mData(data), mSize(sz), mCapacity(sz) {} // creates a vector of sz elements
 
   virtual ~myvector() noexcept(false){
@@ -18,7 +18,7 @@ public:
       delete[] mData;
   }
   
-  myvector(const myvector<T>& other) noexcept(false){
+  myvector(const myvector<T>& other) noexcept(true){
     mData = new T[other.mSize];
     mSize = other.mSize;
     mCapacity = other.mCapacity;
@@ -28,28 +28,35 @@ public:
       mData[i] = other.mData[i];
   }
   
-  myvector(myvector<T>&& other) noexcept(true){
-    mData = other.mData;
-    mSize = other.mSize;
-    mCapacity = other.mCapacity;
-    mUndefined = other.mUndefined;
+  myvector(myvector<T>&& other) noexcept(true):
+    mData(std::exchange<T*>(other.mData, nullptr)),
+    mSize(std::exchange(other.mSize, 0)),
+    mCapacity(std::exchange(other.mCapacity, 0)),
+    mUndefined(other.mUndefined) {}
 
-    other.mData = nullptr;
-    other.mSize = 0;
-    other.mCapacity = 0;
+  myvector& operator=(myvector<T>&& other){
+
+    if(this != &other){
+      this->mSize = std::exchange(other.mSize, 0);
+      this->mCapacity = std::exchange(other.mCapacity, 0);
+      this->mUndefined = other.mUndefined;
+      this->mData = std::exchange<T*>(other.mData, nullptr);
+    }
+    return *this;
   }
-
+  
   myvector& operator=(const myvector<T>& other) noexcept(false){
 
-    this->mSize = other.mSize;
-    this->mCapacity = other.mCapacity;
-    this->mUndefined = other.mUndefined;
-
-    this->mData = new T[this->mSize];
-
-    for(int i = 0; i < this->mSize; i++)
-      this->mData[i] = other.mData[i];
-    
+    if(this != & other){
+      this->mSize = other.mSize;
+      this->mCapacity = other.mCapacity;
+      this->mUndefined = other.mUndefined;
+      
+      this->mData = new T[this->mSize];
+      
+      for(int i = 0; i < this->mSize; i++)
+	this->mData[i] = other.mData[i];
+    }
     return *this;
   }
   
@@ -71,12 +78,13 @@ public:
       return this->mData[offset];
     return mUndefined;
   }
-  
+
   void push_back(const T& t) noexcept(false){
 
     if(mSize != mCapacity - 1){
       mData[mSize] = t;
       mSize++;
+      
       return;
     }
 
@@ -89,6 +97,30 @@ public:
     }
 
     tmp[i] = t;
+
+    delete[] mData;
+
+    mData = tmp;
+    mSize++;
+  }
+
+  void push_back(T&& t) noexcept(false) {
+    
+    if(mSize != mCapacity - 1){
+      mData[mSize] = std::move(t);
+      mSize++;
+      return;
+    }
+
+    mCapacity *= 2;
+    T* tmp = new T[mCapacity];
+
+    int i = 0;
+    for(; i < mSize; i++){
+      tmp[i] = std::move(mData[i]);
+    }
+
+    tmp[i] = std::move(t);
 
     delete[] mData;
 
