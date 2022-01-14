@@ -10,7 +10,7 @@ private:
 
 public:
   myvector(): mData(new T[16]), mSize(0), mCapacity(16) {}
-  myvector(T* data, int sz): mData(data), mSize(sz), mCapacity(sz) {} // creates a vector of sz elements
+  myvector(const T* data, const int sz): mData(data), mSize(sz), mCapacity(sz) {} // creates a vector of sz elements
 
   virtual ~myvector() {
 
@@ -28,7 +28,7 @@ public:
       mData[i] = other.mData[i];
   }
   
-  myvector(myvector<T>&& other) {
+  myvector(myvector<T>&& other) noexcept(false){
     mData = other.mData;
     mSize = other.mSize;
     mCapacity = other.mCapacity;
@@ -39,7 +39,7 @@ public:
     other.mCapacity = 0;
   }
 
-  myvector& operator=(const myvector<T>& other) {
+  myvector& operator=(myvector<T>& other) {
 
     this->mSize = other.mSize;
     this->mCapacity = other.mCapacity;
