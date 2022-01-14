@@ -121,7 +121,7 @@ public:
     return mSize;
   }
   
-  void reserve(unsigned int tCount) {
+  void reserve(const unsigned int tCount) noexcept(false){
 
     if(tCount > mCapacity){
       T* tmp = new T[tCount];
@@ -143,7 +143,7 @@ public:
   struct iterator {
 
     using iterator_category = std::bidirectional_iterator_tag;
-    using different_type = std::ptrdiff_t;
+    using difference_type = std::ptrdiff_t;
     using value_type = T;
     using pointer = T*;
     using reference = T&;
