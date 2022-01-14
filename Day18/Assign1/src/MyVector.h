@@ -9,16 +9,16 @@ private:
   T mUndefined;// Lots of STL functions say that doing something naughty gets "undefined behavior".
 
 public:
-  myvector(): mData(new T[16]), mSize(0), mCapacity(16) {}
-  myvector(const T* data, const int sz): mData(data), mSize(sz), mCapacity(sz) {} // creates a vector of sz elements
+  myvector() noexcept(false): mData(new T[16]), mSize(0), mCapacity(16) {}
+  myvector(const T* data, const int sz) noexcept(true): mData(data), mSize(sz), mCapacity(sz) {} // creates a vector of sz elements
 
-  virtual ~myvector() {
+  virtual ~myvector() noexcept(false){
 
     if(mData != nullptr)
       delete[] mData;
   }
   
-  myvector(const myvector<T>& other) {
+  myvector(const myvector<T>& other) noexcept(false){
     mData = new T[other.mSize];
     mSize = other.mSize;
     mCapacity = other.mCapacity;
@@ -28,7 +28,7 @@ public:
       mData[i] = other.mData[i];
   }
   
-  myvector(myvector<T>&& other) noexcept(false){
+  myvector(myvector<T>&& other) noexcept(true){
     mData = other.mData;
     mSize = other.mSize;
     mCapacity = other.mCapacity;
@@ -39,7 +39,7 @@ public:
     other.mCapacity = 0;
   }
 
-  myvector& operator=(myvector<T>& other) {
+  myvector& operator=(const myvector<T>& other) noexcept(false){
 
     this->mSize = other.mSize;
     this->mCapacity = other.mCapacity;
@@ -53,7 +53,7 @@ public:
     return *this;
   }
   
-  bool operator==(const myvector<T>& other) {
+  bool operator==(const myvector<T>& other) noexcept(false){
 
     if(this->mSize != other.mSize)
       return false;
@@ -66,13 +66,13 @@ public:
     return true;
   }
   
-  T& operator[](int offset) {
-    if(offset > -1 && offset < this->mSize)
+  T& operator[](const unsigned int offset) noexcept(false){
+    if(offset < this->mSize)
       return this->mData[offset];
     return mUndefined;
   }
   
-  void push_back(const T& t) {
+  void push_back(const T& t) noexcept(false){
 
     if(mSize != mCapacity - 1){
       mData[mSize] = t;
@@ -96,18 +96,18 @@ public:
     mSize++;
   }
   
-  void pop_back() {
+  void pop_back() noexcept(true){
     mSize--;//research more
   }
   
-  T& at(int offset) {
+  T& at(const unsigned int offset) noexcept(false){
 
-    if(offset > -1 && offset < mSize)
+    if(offset < mSize)
       return mData[offset];
     return mUndefined;
   }
   
-  void clear() {
+  void clear() noexcept(false){
     delete[] mData;
 
     mSize = 0;
@@ -116,7 +116,7 @@ public:
     mData = new T[mCapacity];
   }
   
-  int size() const {
+  int size() const noexcept(true){
     
     return mSize;
   }
@@ -137,7 +137,9 @@ public:
     }
   } // use an algorithm to increase capacity as required
 
-  int capacity() const {return mCapacity;}
+  int capacity() const noexcept(true){
+    return mCapacity;
+  }
 
   // iterator
   struct iterator {
@@ -148,59 +150,57 @@ public:
     using pointer = T*;
     using reference = T&;
 
-    //friend myvector;
-    
     pointer it;
     
   public:
 
-    iterator(): it(nullptr) {}
-    iterator(pointer myvec): it(myvec) {}
+    iterator() noexcept(true): it(nullptr) {}
+    iterator(pointer myvec) noexcept(false): it(myvec) {}
 
-    reference operator++() {
+    reference operator++() noexcept(true){
       ++this->it;
       return *this;
     }
     
-    iterator operator++(int i){
+    iterator operator++(int i) noexcept(true){
       iterator tmp = *this;
       this->it++;
       return tmp;
     }
     
-    reference operator--() {
+    reference operator--() noexcept(true){
       --this->it;
       return *this;
     }
     
-    iterator operator--(int i) {
+    iterator operator--(int i) noexcept(true){
       iterator tmp = *this;
       this->it--;
       return tmp;
     }
     
-    bool operator==(const iterator& it){
+    bool operator==(const iterator& it) noexcept(true){
       return this->it == it.it;
     }
     
-    bool operator!=(const iterator& it){
+    bool operator!=(const iterator& it) noexcept(true){
       return this->it != it.it;
     }
 
-    reference operator*(){
+    reference operator*() noexcept(true){
       return *(this->it);
     }
 
-    pointer operator->(){
+    pointer operator->() noexcept(true){
       return this->it;
     }
   };
   
-  iterator begin() const {
+  iterator begin() const noexcept(false){
     return iterator(&mData[0]);
   }
   
-  iterator end() const {
+  iterator end() const noexcept(false){
     return iterator(&mData[mSize]);
   }
 };

@@ -2,7 +2,6 @@
 
 #include <gtest/gtest.h>
 #include "MyVector.h"
-#include <iostream>
 
 void fillVec(myvector<int>& vec){
   for(int i = 0; i < SIZE; i++){
