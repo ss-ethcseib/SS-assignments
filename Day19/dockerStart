@@ -1,0 +1,4 @@
+#!/bin/bash
+
+sudo docker build -t day19_assign1 .
+sudo docker run -it day19_assign1 
