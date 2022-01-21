@@ -1,4 +1,4 @@
 #!/bin/bash
 
-sudo docker build -t day21_assign1 .
-sudo docker run -it day21_assign1 
+sudo docker build -t multi-threaded_n_body_problem .
+sudo docker run -it multi-threaded_n_body_problem

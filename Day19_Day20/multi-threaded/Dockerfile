@@ -20,7 +20,10 @@ RUN yum install -y htop
 RUN yum install -y valgrind 
 RUN yum --enablerepo=powertools install -y gtest
 RUN dnf --enablerepo=powertools install -y gtest-devel
+RUN dnf -y install jsoncpp
+RUN dnf -y install jsoncpp-devel
 
-COPY src/* src/
+COPY src/Day21/* src/Day21/
+COPY src/Day22/* src/Day22/
 
 WORKDIR src/

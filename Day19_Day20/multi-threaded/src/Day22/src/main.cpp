@@ -1,9 +1,9 @@
 #include <iostream>
 #include <math.h>
 #include <thread>
-#include <jsoncpp/json/writer.h>
 #include <fstream>
 #include <queue>
+#include <mutex>
 
 typedef struct body body;
 struct body{
@@ -62,7 +62,8 @@ struct body{
       return sqrt(pow(this->x, 2) + pow(this->y, 2));
     }
   };
-  
+
+  int index;
   float mass;
   struct Point position;
   struct Point velocity;
@@ -94,7 +95,7 @@ int main(){
       
       for(int i = 0; i < numBodies[index]; i++){
 	
-	bodies[i] = {initial_mass,
+	bodies[i] = {i, initial_mass,
 		     {static_cast<float>(rand() % 10 * change * -1),
 		      static_cast<float>(rand() % 10 * change)},
 		     {0.f, 0.f}, {0.0, 0.0}, {0.f, 0.f}};
@@ -103,7 +104,7 @@ int main(){
     };
 
   auto CalcForceExerted =
-    [&bodies, G](int index) mutable noexcept(true) -> void
+    [&bodies, G](int index, body& bod) mutable noexcept(true) -> void
     {
       
       //The two bodies being looked at exert the same amount of force on
@@ -111,29 +112,30 @@ int main(){
       //optimization can be done to achieve O(nlogn) time complexity.
 
       body::Point vector;
-      for(int y = 0; y < numBodies[index] - 1; y++){
-	for(int x = y + 1; x < numBodies[index]; x++){
+      //for(int y = 0; y < numBodies[index] - 1; y++){
+      for(int x = bod.index + 1/*y + 1*/; x < numBodies[index]; x++){
 
 	  //calculate the numerator of the fraction
-	  vector = (bodies[x].position - bodies[y].position) * G * bodies[x].mass * bodies[y].mass;
+	  vector = (bodies[x].position - bod.position) * G * bodies[x].mass * bod.mass;
 
 	  //calculate the denominator of the fraction.
 	  vector = vector /abs(
 	    pow(
 	      sqrt(
-		   pow(bodies[y].position.x - bodies[x].position.x, 2) +
-		   pow(bodies[y].position.y - bodies[x].position.y, 2))
+		   pow(bodies[x].position.x - bod.position.x, 2) +
+		   pow(bodies[x].position.y - bod.position.y, 2))
 	      , 3));
 	  
-	  bodies[y].totalForce = bodies[y].totalForce + vector;
+	  bod.totalForce = bod.totalForce + vector;
 	  bodies[x].totalForce = bodies[x].totalForce - vector;
 	}
-      }
+	//}
     };
 
 
-  auto UpdateBodies =
-    [&bodies, timestep](int index) mutable noexcept(true) -> void {
+  std::mutex m;
+  auto UpdateBody =
+    [&CalcForceExerted, &m, timestep](body&& bod) mutable noexcept(true) -> void {
 
       auto UpdateAcceleration =
 	[](body& bod) mutable noexcept(true) -> void {
@@ -149,12 +151,14 @@ int main(){
 	[timestep](body& bod) mutable noexcept(true) -> void {
 	  bod.position = bod.position + bod.velocity * timestep;
 	};
-	
-      for(int i = 0; i < numBodies[index]; i++){
-	UpdateAcceleration(bodies[i]);
-	UpdateVelocity(bodies[i]);
-	UpdatePosition(bodies[i]);
-      }
+
+      std::lock_guard<std::mutex> lock(m);      
+      CalcForceExerted(2, bod);
+      
+      UpdateAcceleration(bod);
+      UpdateVelocity(bod);
+      UpdatePosition(bod);
+      
     };
 
   auto ComputeDistance =
@@ -175,57 +179,29 @@ int main(){
     [](int count, float D) noexcept(true) -> float {
       return k * count * count / D;
     };
-
-  auto threadFunc =
-    [=](float& ret) mutable noexcept(false) -> void {
-
-      fillArr(2);
-      
-      float start = 0.0f;
-      long double dur = timestep * 60 * 60 * 24 * 30;
-      
-      while(start < dur){
-	CalcForceExerted(2);
-	UpdateBodies(2);
-	
-	start += timestep * 60 * 60 * 24;
-	ret += InteractionsPerSec(numBodies[2], dur);
-      }
-      
-      delete[] bodies;
-    };
-  std::queue<std::thread> ts;
-  std::queue<float*> rets;
-  float* ret;
-  Json::Value event;
+    
+  fillArr(2);
   
-  for(int x = 0; x < 8; x++){
-    for(int y = 0; y <= x; y++){
-      ret = new float;
-      *ret = 0.f;
-      
-      ts.push(std::thread(threadFunc, std::ref(*ret)));
-      rets.push(ret);
+  float start = 0.0f;
+  long double dur = timestep * 60 * 60 * 24 * 30;
+  std::queue<std::thread> qt;
+
+  //Where the threading begins  
+  while(start < dur){
+    
+    for(int i = 0; i < numBodies[2]; i++)
+      qt.push(std::thread(UpdateBody, std::move(bodies[i])));
+    
+    //i'm undecided if I should move this outside the while loop.
+    for(int i = 0; i < numBodies[2]; i++){
+      qt.front().join();
+      qt.pop();
     }
 
-    float aggregate = 0.f;
-    for(int y = 0; y <= x; y++){
-      ts.front().join();
-      ts.pop();
-      
-      aggregate += *rets.front();
-      delete rets.front();
-      rets.pop();
-    }
-    event[x]["interactions per second"] = aggregate;
-    event[x]["thread count"] = x + 1;
+    start += timestep * 60 * 60 * 24;
   }
   
-  std::ofstream out("json", std::ios::out);
- 
-  std::cout << event << std::endl;
-  out << event <<std::endl;
-
-  out.close();
+  delete[] bodies;
+  
   return 0;
 }
