@@ -63,11 +63,9 @@ struct body{
     }
   };
   
-  int ind; // index of body
   float mass;
   struct Point position;
   struct Point velocity;
-  //float *forceVector; // computed {f-i1,fi2...fiN}
   struct Point totalForce; // computed
   struct Point acceleration;  // computed from f = ma
 };
@@ -96,7 +94,7 @@ int main(){
       
       for(int i = 0; i < numBodies[index]; i++){
 	
-	bodies[i] = {i, initial_mass,
+	bodies[i] = {initial_mass,
 		     {static_cast<float>(rand() % 10 * change * -1),
 		      static_cast<float>(rand() % 10 * change)},
 		     {0.f, 0.f}, {0.0, 0.0}, {0.f, 0.f}};
@@ -180,22 +178,21 @@ int main(){
 
   auto threadFunc =
     [=](float& ret) mutable noexcept(false) -> void {
-      //      for(int i = 0; i < 9; i++){
-      fillArr(2);//i);
+
+      fillArr(2);
+      
+      float start = 0.0f;
+      long double dur = timestep * 60 * 60 * 24 * 30;
+      
+      while(start < dur){
+	CalcForceExerted(2);
+	UpdateBodies(2);
 	
-	float start = 0.0f;
-	long double dur = timestep * 60 * 60 * 24 * 30;
-	
-	while(start < dur){
-	  CalcForceExerted(2);
-	  UpdateBodies(2);
-	  
-	  start += timestep * 60 * 60 * 24;
-	}
-	
-	delete[] bodies;
-	ret = InteractionsPerSec(numBodies[2], dur);
-	//}
+	start += timestep * 60 * 60 * 24;
+	ret += InteractionsPerSec(numBodies[2], dur);
+      }
+      
+      delete[] bodies;
     };
   std::queue<std::thread> ts;
   std::queue<float*> rets;
@@ -206,7 +203,8 @@ int main(){
     for(int y = 0; y <= x; y++){
       ret = new float;
       *ret = 0.f;
-      ts.push(std::move(std::thread(threadFunc, std::ref(*ret))));
+      
+      ts.push(std::thread(threadFunc, std::ref(*ret)));
       rets.push(ret);
     }
 

@@ -1,34 +1,34 @@
 [
 	{
-		"interactions per second" : 0.00015432099462486804,
+		"interactions per second" : 0.0046296310611069202,
 		"thread count" : 1
 	},
 	{
-		"interactions per second" : 0.00030864198924973607,
+		"interactions per second" : 0.0092592621222138405,
 		"thread count" : 2
 	},
 	{
-		"interactions per second" : 0.00046296298387460411,
+		"interactions per second" : 0.013888893648982048,
 		"thread count" : 3
 	},
 	{
-		"interactions per second" : 0.00061728397849947214,
+		"interactions per second" : 0.018518524244427681,
 		"thread count" : 4
 	},
 	{
-		"interactions per second" : 0.00077160494402050972,
+		"interactions per second" : 0.023148154839873314,
 		"thread count" : 5
 	},
 	{
-		"interactions per second" : 0.0009259259095415473,
+		"interactions per second" : 0.027777785435318947,
 		"thread count" : 6
 	},
 	{
-		"interactions per second" : 0.0010802468750625849,
+		"interactions per second" : 0.032407417893409729,
 		"thread count" : 7
 	},
 	{
-		"interactions per second" : 0.0012345678405836225,
+		"interactions per second" : 0.037037048488855362,
 		"thread count" : 8
 	}
 ]
