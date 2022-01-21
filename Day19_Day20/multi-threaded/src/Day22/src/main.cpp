@@ -112,28 +112,31 @@ int main(){
       //optimization can be done to achieve O(nlogn) time complexity.
 
       body::Point vector;
-      //for(int y = 0; y < numBodies[index] - 1; y++){
-      for(int x = bod.index + 1/*y + 1*/; x < numBodies[index]; x++){
+      std::mutex m;
+
+      for(int x = bod.index + 1; x < numBodies[index]; x++){
 
 	  //calculate the numerator of the fraction
+	std::lock_guard<std::mutex> lock(m);
+	{
 	  vector = (bodies[x].position - bod.position) * G * bodies[x].mass * bod.mass;
-
+	  
 	  //calculate the denominator of the fraction.
 	  vector = vector /abs(
-	    pow(
-	      sqrt(
-		   pow(bodies[x].position.x - bod.position.x, 2) +
-		   pow(bodies[x].position.y - bod.position.y, 2))
-	      , 3));
+	     pow(
+		 sqrt(
+		      pow(bodies[x].position.x - bod.position.x, 2) +
+		      pow(bodies[x].position.y - bod.position.y, 2))
+		 , 3));
 	  
 	  bod.totalForce = bod.totalForce + vector;
 	  bodies[x].totalForce = bodies[x].totalForce - vector;
 	}
-	//}
+      }
     };
 
 
-  std::mutex m;
+  //std::mutex m;
   auto UpdateBody =
     [&CalcForceExerted, &m, timestep](body&& bod) mutable noexcept(true) -> void {
 
@@ -152,7 +155,7 @@ int main(){
 	  bod.position = bod.position + bod.velocity * timestep;
 	};
 
-      std::lock_guard<std::mutex> lock(m);      
+      //  std::lock_guard<std::mutex> lock(m);      
       CalcForceExerted(2, bod);
       
       UpdateAcceleration(bod);
