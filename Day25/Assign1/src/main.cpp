@@ -3,6 +3,7 @@
 #include <future>
 #include <thread>
 #include <numeric>
+#include <cassert>
 
 template<class T>
 void accumulate(std::vector<T>& vec, std::promise<T>& pr){
@@ -18,9 +19,8 @@ int main(){
 
   std::thread th(accumulate<int>, std::ref(vec), std::ref(pr));
 
-  std::cout << "Promise/future value should be: " << std::accumulate(vec.begin(), vec.end(), 0) << "\n\tvalue: " << fut.get() << std::endl;
-  
+  assert(std::accumulate(vec.begin(), vec.end(), 0) == fut.get());
   th.join();
-
+  
   return 0;
 }
