@@ -1,0 +1,4 @@
+#!/bin/bash
+
+sudo docker build -t day27 .
+sudo docker run -it day27
