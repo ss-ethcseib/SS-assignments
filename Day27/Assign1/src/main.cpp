@@ -86,6 +86,9 @@ public:
       }
       }
   }
+  delete[] flatA;
+  delete[] flatB;
+  
   return matrixC;
   }
 
