@@ -1,0 +1,1 @@
+When you run this using the provided dockerfile you have to be sure to use the dockerStart.sh bash script as opposed to the start.sh bash script. This has to do with the way the program needs to be built in both environments.
